@@ -102,3 +102,14 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# my stuff
+texts/
+files.json
+noError.py
+build/
+dist/
+*.spec
+sys
+test.json
+test2.json
