@@ -8,7 +8,7 @@ class main:
     def __init__(self):
         # Tests if arguments there
         if len(sys.argv) < 3:
-            print("needs 2 arguments ( [action] [storage filename] )")
+            print("needs 2 arguments ( [action] [filename] )")
             return
         
         arguments = sys.argv[1:]
