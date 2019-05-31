@@ -114,3 +114,4 @@ sys
 test.json
 test2.json
 .vscode/
+compiled/
