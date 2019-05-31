@@ -19,8 +19,9 @@ class main:
             "add":self.new_cards, 
             "study": self.study,
             "search": self.search,
-            "config": self.config,
-            "reset": self.reset
+            "delete": self.delete,
+            "reset": self.reset,
+            "reverse": self.reverse
         }
         
         for i,y in keywords.items():
@@ -70,9 +71,14 @@ class main:
         c = cardList()
         c.get(self.path)
         c.reset(self.path)
-
-    def config(self):
+    
+    def delete(self):
         pass
+    
+    def reverse(self):
+        c = cardList()
+        c.get(self.path)
+        c.reverse(self.path)
 
 class studyClass:
     def __init__(self, path):
@@ -175,6 +181,7 @@ class card:
         s = self.solution
         self.text = s
         self.solution = t
+        self.toDict()
 
 class cardList(list):
     def __init__(self):
