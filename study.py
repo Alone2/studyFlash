@@ -126,8 +126,8 @@ class studyClass:
         self.evilLoop()
     
     def isKnown(self, i):
-        # very complex alogrythem
-        if i.timesCorrect > i.timesIncorrect:
+        # very complex algorithm
+        if i.timesCorrect > i.timesIncorrect and i.timesCorrect > 2:
             return True
         return False
     
