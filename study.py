@@ -1,3 +1,5 @@
+#!/bin/python3
+
 import sys
 import json
 from pathlib import Path
@@ -12,23 +14,23 @@ class main:
         arguments = sys.argv[1:]
         self.path = arguments[1]
 
-        if arguments[0] == "new":
-            self.new_file()
-            return
-        if arguments[0] == "add":
-            self.new_cards()
-            return
-        if arguments[0] == "remove":
-            pass
+        keywords = {
+            "new" : self.new_cards, 
+            "add":self.new_cards, 
+            "study": self.study,
+            "search": self.search,
+            "config": self.config,
+            "reset": self.reset
+        }
+        
+        for i,y in keywords.items():
+            if self.testIfArgument(i, arguments[0], y):
+                break
 
-        if arguments[0] == "search":
-            pass
-
-        if arguments[0] == "study":
-            studyClass(self.path)
-            return
-        if arguments[0] == "config":
-            pass
+    def testIfArgument(self, arg, text, func):
+        if arg == text:
+            func()
+            return True
 
     def new_file(self):
         p = Path(self.path)
@@ -58,6 +60,19 @@ class main:
         except KeyboardInterrupt:
             cList.save(self.path)
 
+    def study(self):
+        studyClass(self.path)
+
+    def search(self):
+        pass
+
+    def reset(self):
+        c = cardList()
+        c.get(self.path)
+        c.reset(self.path)
+
+    def config(self):
+        pass
 
 class studyClass:
     def __init__(self, path):
@@ -65,21 +80,50 @@ class studyClass:
         cardL = cardList()
         cardL.get(path)
         self.cardList = cardL
+        
+        self.isKnownList = []
+        for i in range(len(self.cardList)):
+            self.isKnownList.append(False)
+        
         self.evilLoop()
     
     def evilLoop(self):
-        l = self.generateList()
-        for i in l:
+        self.cardList
+        for num in range(len(self.cardList)):
+            # Tests if word is known
+            if self.isKnownList[num]:
+                continue
+            # Question input
+            i = self.cardList[num]
             inp = input("\nQuestion: " + i.text + " -> ")
+
+            # Tests if input matchs answer
             if i.guess(inp):
                 input("correct!      (Enter to continue)")
-                continue
-            correct = input("incorrect: " + i.solution + "      (\"r\" to count as correct, Enter to continue)")
-            if correct == "r":
-                i.reverseGuess()
-                continue
-            self.retypeUntilCorrect(i.solution)
+            # If incorrect, asks if typo
+            else:
+                correct = input("incorrect: " + i.solution + "      (\"r\" to count as correct, Enter to continue)")
+                if correct == "r":
+                    i.reverseGuess()
+                else:
+                # if really incorrect 
+                    self.retypeUntilCorrect(i.solution)
+            
+            # When times the word was correct is bigger than incorrect -> user knows the word
+            if i.timesCorrect > i.timesIncorrect:
+                self.isKnownList[num] = True
+            
+            # Saves everything
+            self.cardList.save(self.path, False)
+        
+        # repeats itself
         self.evilLoop()
+    
+    def isKnown(self, i):
+        # very complex alogrythem
+        if i.timesCorrect > i.timesIncorrect:
+            return True
+        return False
     
     def retypeUntilCorrect(self, text):
         inp = input("Type " + text + " -> ")
@@ -88,6 +132,7 @@ class studyClass:
 
     def generateList(self):
         # List are going to be sorted here
+        # Idea: save the cards to study with their array id, because we wanna save the whole list later on
         return self.cardList
 
 
@@ -96,27 +141,29 @@ class card:
         self.dict = {}
 
         self.text = text
-        self.dict["text"] = text
-
         self.solution = solution
-        self.dict["solution"] = solution
-
         self.timesCorrect = timesCorrect
-        self.dict["timesCorrect"] = timesCorrect
-
         self.timesIncorrect = timesIncorrect
-        self.dict["timesIncorrect"] = timesIncorrect
-
         self.timesPlayed = timesPlayed
-        self.dict["timesPlayed"] = timesPlayed
+
+        self.toDict()
+
+    def toDict(self):
+        self.dict["text"] = self.text
+        self.dict["solution"] = self.solution
+        self.dict["timesCorrect"] = self.timesCorrect
+        self.dict["timesIncorrect"] = self.timesIncorrect
+        self.dict["timesPlayed"] = self.timesPlayed
     
     def guess(self, text):
         self.timesPlayed += 1
         if text == self.solution:
             self.timesCorrect += 1
+            self.toDict()
             return True
         else:
             self.timesIncorrect += 1
+            self.toDict()
             return False
 
     def reverseGuess(self):
@@ -158,8 +205,9 @@ class cardList(list):
             newCard = card(t, s, c, ic, tp)
             self.add_new(newCard)
 
-    def save(self, path):
-        print("\nsaved...")
+    def save(self, path, output = True):
+        if output:
+            print("\nsaved...")
         # open file, write
         dataJSON = json.dumps(self.list, indent=2)
         jsonFile = open(path, 'w')
@@ -172,9 +220,18 @@ class cardList(list):
             i.reverse()
         self.save(path)
 
+    def reset(self, path):
+        for i in self:
+            i.timesCorrect = 0
+            i.timesIncorrect = 0
+            i.timesPlayed = 0
+            i.toDict()
+        self.save(path)
+
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
         # Save exit comming soon!
+        print("\n")
         sys.exit()
