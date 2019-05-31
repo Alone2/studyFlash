@@ -40,7 +40,7 @@ If the number of you knowing the correct answer is bigger than of you not knowin
 The script resets the number of you knowing the correct/wrong answer, so you can start studying from scratch again.
 
 
-### Study by Solution
+### Learn Words by Solution
 ```
 ./study.py reverse FILENAME.json
 ```
