@@ -114,6 +114,7 @@ class studyClass:
                 elif correct == "c":
                     i.solution = inp
                     i.toDict()
+                    i.reverseGuess()
                 elif correct == "w":
                     i.solution = input("correct: ")
                     i.toDict()
