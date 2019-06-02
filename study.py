@@ -70,51 +70,104 @@ class main:
         c.reset(self.path)
     
     def edit(self):
-        c = cardList()
-        c.get(self.path)
-
-        all_words = "# DO NOT ADD/DELETE Lines! (Delete by replacing question or solution with '###')\n"
-        for i in c:
-            all_words +="\n" + i.text + "\n" + i.solution + "\n"
-        
-        # open temp file 
-        cur_path = self.path + ".tempWords"
-        f = open(cur_path, "w+")
-        f.write(all_words)
-        f.close()
-        # user can chage file
-        os.system("vim " + cur_path)
-        # read temp file after user input
-        f = open(cur_path, "r")
-        output = f.read()
-        f.close()
-        # remove temp file
-        os.remove(cur_path)
-
-        # User input saved
-        output = output.split("\n")
-        cl = 0
-        remove_from_list = []
-        for i in range(2, len(output), 3):
-            if output[i] == "###" or output[i+1] == "###":
-                remove_from_list.append(cl)
-            c[cl].text = output[i]
-            c[cl].solution = output[i+1]
-            c[cl].toDict()
-            cl += 1
-
-        # remove from list
-        minus = 0
-        for i in remove_from_list:
-            c.remove(i - minus)
-            minus += 1
-        # save
-        c.save(self.path)
+        editClass(self.path)
 
     def reverse(self):
         c = cardList()
         c.get(self.path)
         c.reverse(self.path)
+
+class editClass:
+    def __init__(self, path):
+        self.path = path
+
+        self.c = cardList()
+        self.c.get(self.path)
+
+        self.all_words = "# DO NOT ADD/DELETE Lines! (Delete by replacing question or solution with '###')\n"
+        for i in self.c:
+            self.all_words +="\n" + i.text + "\n" + i.solution + "\n"
+        self.oldOutput = self.all_words.split("\n")
+        
+        # Get user input
+        self.originalOutput = self.__getUserInput(self.all_words)
+        # Save input
+        self.checkOutput()
+    
+    def checkOutput(self):
+        # User input saved
+        output = self.originalOutput.split("\n")
+        cl = 0
+        isError = False
+        remove_from_list = []
+        for i in range(2, len(output), 3):
+            # If error
+            if output[i] == "" or output[i+1] == "":
+                isError = True
+                break
+            # If delete
+            if output[i] == "###" or output[i+1] == "###":
+                remove_from_list.append(cl)
+            # If new words -> append
+            if cl+1 > (len(self.oldOutput) - 2)/3:
+                new_card = card(output[i], output[i+1])
+                self.c.add_new(new_card)
+                continue
+            
+            self.c[cl].text = output[i]
+            self.c[cl].solution = output[i+1]
+            self.c[cl].toDict()
+            cl += 1
+        # if error
+        if isError:
+            self.__errorHandling()
+            return
+        # remove from list
+        minus = 0
+        for i in remove_from_list:
+            self.c.remove(i - minus)
+            minus += 1
+        # save
+        self.c.save(self.path)
+    
+    def __errorHandling(self):
+        a = input("Formattig error, type \"r\" to re-edit file, \"d\" to discard changes, \"s\" to save as temp file ")
+        # rewrite stuff
+        if a == "r":
+            self.originalOutput = self.__getUserInput(self.originalOutput)
+            self.checkOutput()
+    
+            sys.exit()
+        # just close
+        if a == "d":
+            sys.exit()
+        # save everything
+        if a == "s":
+            self.__saveFile(input("Filename to save: "), self.originalOutput)
+            sys.exit()
+
+        self.__errorHandling()
+    
+    def __getUserInput(self, all_words):
+        # open temp file 
+        cur_path = self.path + ".tempWords"
+        self.__saveFile(cur_path, all_words)
+        
+        # user can chage file
+        os.system("vim " + cur_path)
+
+        # read temp file after user input
+        f = open(cur_path, "r")
+        originalOutput = f.read()
+        f.close()
+
+        return originalOutput
+
+    @staticmethod
+    def __saveFile(path, text):
+        f = open(path, "w+")
+        f.write(text)
+        f.close()
 
 class studyClass:
     def __init__(self, path):
