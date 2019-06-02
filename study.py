@@ -124,8 +124,8 @@ class studyClass:
         self.cardList = cardL
         
         self.isKnownList = []
-        for i in range(len(self.cardList)):
-            self.isKnownList.append(False)
+        for i in self.cardList:
+            self.isKnownList.append(self.isKnown(i))
         
         self.evilLoop()
     
