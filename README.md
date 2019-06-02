@@ -39,9 +39,21 @@ If the number of you knowing the correct answer is bigger than of you not knowin
 
 Vim opens with all your cards in it. 
 You can change all the answers/questions of your flashcards. 
-Deleting a card by renaming the answer/question to '####' is also possible.
+Deleting a card by renaming the answer/question to '###' is also possible.
+You can also add cards by adding them at **the end** of the document.
 
+Here an example file with 3 cards in it:
+```
+# When adding cards -> put them after the existing ones! Delete a card by replacing the question or solution with '###'
+A random question 
+A random answer
 
+Turtle 
+Schildkröte
+ 
+Something 
+Something in another language
+```
 ### Reset your Statistics 
 ```
 ./study.py reset FILENAME.json
