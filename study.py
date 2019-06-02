@@ -108,10 +108,10 @@ class studyClass:
                 input("correct!      (Enter to continue)")
             # If incorrect, asks if typo
             else:
-                correct = input("incorrect: " + i.solution + "      (\"r\" to count as correct, \"c\"/\"w\" to replace current, Enter to continue)")
-                if correct == "r":
+                correct = input("incorrect: " + i.solution + "      (\"c\" -> correct (typo), \"r\" -> replace (correct), \"w\" replace with sth new, Enter to continue)")
+                if correct == "c":
                     i.reverseGuess()
-                elif correct == "c":
+                elif correct == "r":
                     i.solution = inp
                     i.toDict()
                     i.reverseGuess()
