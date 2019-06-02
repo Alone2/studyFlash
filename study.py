@@ -2,6 +2,7 @@
 
 import sys
 import json
+import os
 from pathlib import Path
 
 class main:
@@ -18,8 +19,7 @@ class main:
             "new" : self.new_cards, 
             "add":self.new_cards, 
             "study": self.study,
-            "search": self.search,
-            "delete": self.delete,
+            "edit": self.edit,
             "reset": self.reset,
             "reverse": self.reverse
         }
@@ -64,17 +64,53 @@ class main:
     def study(self):
         studyClass(self.path)
 
-    def search(self):
-        pass
-
     def reset(self):
         c = cardList()
         c.get(self.path)
         c.reset(self.path)
     
-    def delete(self):
-        pass
-    
+    def edit(self):
+        c = cardList()
+        c.get(self.path)
+
+        all_words = "# DO NOT ADD/DELETE Lines! (Delete by replacing question or solution with '###')\n"
+        for i in c:
+            all_words +="\n" + i.text + "\n" + i.solution + "\n"
+        
+        # open temp file 
+        cur_path = self.path + ".tempWords"
+        f = open(cur_path, "w+")
+        f.write(all_words)
+        f.close()
+        # user can chage file
+        os.system("vim " + cur_path)
+        # read temp file after user input
+        f = open(cur_path, "r")
+        output = f.read()
+        f.close()
+        # remove temp file
+        os.remove(cur_path)
+
+        # User input saved
+        output = output.split("\n")
+        cl = 0
+        remove_from_list = []
+        for i in range(2, len(output), 3):
+            if output[i] == "###" or output[i+1] == "###":
+                remove_from_list.append(cl)
+            c[cl].text = output[i]
+            c[cl].solution = output[i+1]
+            c[cl].toDict()
+            cl += 1
+
+        # remove from list
+        minus = 0
+        for i in remove_from_list:
+            c.remove(i - minus)
+            minus += 1
+        # save
+        c.save(self.path)
+
     def reverse(self):
         c = cardList()
         c.get(self.path)
@@ -197,6 +233,10 @@ class cardList(list):
     def add_new(self, cardItem):
         self.append(cardItem)
         self.list.append(cardItem.dict)
+
+    def remove(self, index):
+        del self[index]
+        del self.list[index]
 
     def get(self, path):
         # open file, read
