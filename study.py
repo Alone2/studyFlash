@@ -84,7 +84,7 @@ class editClass:
         self.c = cardList()
         self.c.get(self.path)
 
-        self.all_words = "# Add lines at the END of this document! Delete card by replacing question or solution with '###'\n"
+        self.all_words = "# When adding cards -> put them after the existing ones! Delete a card by replacing the question or solution with '###'\n"
         for i in self.c:
             self.all_words +="\n" + i.text + "\n" + i.solution + "\n"
         self.oldOutput = self.all_words.split("\n")
