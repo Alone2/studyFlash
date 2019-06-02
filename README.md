@@ -10,7 +10,7 @@ A python script to learn flashcards inside your terminal (for language learning)
 A file is being created. You can add your questions / solutions
 
 
-### Add cards to file
+### Add Cards to File
 ```
 ./study.py add FILENAME.json
 ```
@@ -32,6 +32,16 @@ If the number of you knowing the correct answer is bigger than of you not knowin
 (use ctrl+c to return to terminal)
 
 
+### Edit your Cards
+```
+./study.py edit FILENAME.json
+```
+
+Vim opens with all your cards in it. 
+You can change all the answers/questions of your flashcards. 
+Deleting a card by renaming the answer/question to '####' is also possible.
+
+
 ### Reset your Statistics 
 ```
 ./study.py reset FILENAME.json
@@ -47,6 +57,3 @@ The script resets the number of you knowing the correct/wrong answer, so you can
 
 If you want that the solution is showed and you need to type the question, you can just reverse your file.
 
-
-### Edit Flashcards
-You can simply edit your cards by opening your flashcard json file.
