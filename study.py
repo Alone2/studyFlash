@@ -161,6 +161,8 @@ class editClass:
         originalOutput = f.read()
         f.close()
 
+        os.remove(cur_path)
+
         return originalOutput
 
     @staticmethod
