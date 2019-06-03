@@ -86,7 +86,7 @@ class editClass:
 
         self.all_words = "# When adding cards -> put them after the existing ones!\n"
         self.all_words += "# Delete a card by replacing the question or solution with '###'\n"
-        self.all_words += "# Put an empty line between two cards\n"
+        self.all_words += "# Put an empty line between cards\n"
 
         # if no cards -> dummy cards
         if len(self.c) < 1:
