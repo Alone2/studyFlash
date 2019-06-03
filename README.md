@@ -7,7 +7,7 @@ A python script to learn flashcards inside your terminal (for language learning)
 ./study.py new FILENAME.json
 ```
 
-A file is being created. You can add your questions / solutions
+A file is being created. You can add your questions / solutions with ```./study.py add FILENAME.json``` or ```./study.py edit FILENAME.json``` (opens with text editor, default -> vim)
 
 
 ### Add Cards to File
@@ -44,7 +44,10 @@ You can also add cards by adding them at **the end** of the document.
 
 Here an example file with 3 cards in it:
 ```
-# When adding cards -> put them after the existing ones! Delete a card by replacing the question or solution with '###'
+# When adding cards -> put them after the existing ones!
+# Delete a card by replacing the question or solution with '###'
+# Put an empty line between cards
+
 A random question 
 A random answer
 
@@ -67,5 +70,4 @@ The script resets the number of you knowing the correct/wrong answer, so you can
 ./study.py reverse FILENAME.json
 ```
 
-If you want that the solution is showed and you need to type the question, you can just reverse your file.
-
+Use that command if you want to switch your solutions with your anwsers.
