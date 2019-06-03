@@ -16,7 +16,7 @@ class main:
         self.path = arguments[1]
 
         keywords = {
-            "new" : self.new_cards, 
+            "new" : self.new_file, 
             "add":self.new_cards, 
             "study": self.study,
             "edit": self.edit,
@@ -39,9 +39,9 @@ class main:
             print("File is alredy here!")
             return
         f = open(self.path,"w+")
-        f.write("{}")
+        f.write(json.dumps({"cards":{}, "config":{"standartTextEditor":"vi"}}))
         f.close()
-        self.new_cards()
+        print("File created, add cards by typing: ./study.py add [FILENAME]  or  ./study edit [FILENAME]")
         
     def new_cards(self):
         # Cards are taken out of file
@@ -84,7 +84,15 @@ class editClass:
         self.c = cardList()
         self.c.get(self.path)
 
-        self.all_words = "# When adding cards -> put them after the existing ones! Delete a card by replacing the question or solution with '###'\n"
+        self.all_words = "# When adding cards -> put them after the existing ones!\n"
+        self.all_words += "# Delete a card by replacing the question or solution with '###'\n"
+        self.all_words += "# Put an empty line between two cards\n"
+
+        # if no cards -> dummy cards
+        if len(self.c) < 1:
+            a = card("Replace me with a real question", "Replace me with a real answer")
+            self.c.add_new(a)
+        
         for i in self.c:
             self.all_words +="\n" + i.text + "\n" + i.solution + "\n"
         self.oldOutput = self.all_words.split("\n")
@@ -100,7 +108,7 @@ class editClass:
         cl = 0
         isError = False
         remove_from_list = []
-        for i in range(2, len(output), 3):
+        for i in range(4, len(output), 3):
             # If error
             if output[i] == "" or output[i+1] == "":
                 isError = True
@@ -154,7 +162,7 @@ class editClass:
         self.__saveFile(cur_path, all_words)
         
         # user can chage file
-        os.system("vim " + cur_path)
+        os.system(self.c.standartTextEdit + " " + cur_path)
 
         # read temp file after user input
         f = open(cur_path, "r")
@@ -284,6 +292,7 @@ class card:
 class cardList(list):
     def __init__(self):
         self.list = []
+        self.config = {}
 
     def add_new(self, cardItem):
         self.append(cardItem)
@@ -304,7 +313,7 @@ class cardList(list):
             sys.exit()
         
         # create new cards with data
-        for i in data:
+        for i in data["cards"]:
             t = i["text"]
             s = i["solution"]
             c = i["timesCorrect"]
@@ -313,12 +322,21 @@ class cardList(list):
 
             newCard = card(t, s, c, ic, tp)
             self.add_new(newCard)
+        
+        self.__change_config(data["config"])
 
+    def __change_config(self, config):
+        self.config = config
+        self.standartTextEdit = config["standartTextEditor"]
+
+    def toDict(self):
+        self.config["standartTextEditor"] = self.standartTextEdit
+        
     def save(self, path, output = True):
         if output:
             print("\nsaved...")
         # open file, write
-        dataJSON = json.dumps(self.list, indent=2)
+        dataJSON = json.dumps({"cards":self.list, "config":self.config}, indent=2)
         jsonFile = open(path, 'w')
         jsonFile.write(dataJSON)
         jsonFile.close()
