@@ -1,8 +1,20 @@
+
 # studyFlash
 A python script to learn flashcards inside your terminal (for language learning)
 
-## Usage
-### Create a Flashcard File (.json)
+## Table of Contents
+1. [Usage](#usage)
+1.1. [Create Flashcard File](#create)
+1.2. [Add Cards](#add)
+1.3. [Import from Quzlet](#import)
+1.5. [Study](#learn)
+1.4. [Edit Cards](#edit)
+1.6. [Reset Statistics](#reset)
+1.7. [Replace Solution by Answers](#solutions)
+
+## Usage <a name="usage"></a>
+
+### Create a Flashcard File (.json)  <a name="create"></a>
 ```
 ./study.py new FILENAME.json
 ```
@@ -10,7 +22,7 @@ A python script to learn flashcards inside your terminal (for language learning)
 A file is being created. You can add your questions / solutions with ```./study.py add FILENAME.json``` or ```./study.py edit FILENAME.json``` (opens with text editor, default -> vim)
 
 
-### Add Cards to File
+### Add Cards to File  <a name="add"></a>
 ```
 ./study.py add FILENAME.json
 ```
@@ -18,7 +30,16 @@ A file is being created. You can add your questions / solutions with ```./study.
 You need to type your questions / solutions
 
 
-### Learn Words
+### Import Cards from Quizlet <a name="import"></a>
+```
+./getFromQuizlet.py QUIZLET_LINK FILENAME.json
+```
+
+Creates a new file with cards from Quizlet. 
+When the file already exists, the cards are going to be added to the existing ones.
+
+
+### Study Cards <a name="learn"></a>
 ```
 ./study.py study FILENAME.json
 ```
@@ -32,7 +53,7 @@ If the number of you knowing the correct answer is bigger than of you not knowin
 (use ctrl+c to return to terminal)
 
 
-### Edit your Cards
+### Edit your Cards <a name="edit"></a>
 ```
 ./study.py edit FILENAME.json
 ```
@@ -57,7 +78,7 @@ Schildkröte
 Something 
 Something in another language
 ```
-### Reset your Statistics 
+### Reset your Statistics  <a name="reset"></a>
 ```
 ./study.py reset FILENAME.json
 ```
@@ -65,9 +86,10 @@ Something in another language
 The script resets the number of you knowing the correct/wrong answer, so you can start studying from scratch again.
 
 
-### Learn Words by Solution
+### Learn Words by Solution <a name="solution"></a>
 ```
 ./study.py reverse FILENAME.json
 ```
 
 Use that command if you want to switch your solutions with your anwsers.
+
