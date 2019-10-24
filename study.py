@@ -33,7 +33,9 @@ class main:
             func()
             return True
 
-    def new_file(self):
+    def new_file(self,path = ""):
+        if path:
+            self.path = path
         p = Path(self.path)
         if p.exists():
             print("File is alredy here!")
@@ -207,7 +209,7 @@ class studyClass:
                 input("correct!      (Enter to continue)")
             # If incorrect, asks if typo
             else:
-                correct = input("incorrect: " + i.solution + "      (\"c\" -> correct (typo), \"r\" -> replace (correct), \"w\" replace with sth new, Enter to continue)")
+                correct = input("incorrect: " + i.solution + "      (\"c\" -> correct (typo), \"r\" -> replace (correct), \"w\" -> replace with sth new, Enter -> continue)")
                 if correct == "c":
                     i.reverseGuess()
                 elif correct == "r":
