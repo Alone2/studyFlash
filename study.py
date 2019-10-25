@@ -7,12 +7,15 @@ from pathlib import Path
 
 class main:
     def __init__(self):
+        self.args = sys.argv
+
         # Tests if arguments there
         if len(sys.argv) < 3:
             print("needs 2 arguments ( [action] [filename] )")
+            self.help()
             return
-        
-        arguments = sys.argv[1:]
+
+        arguments = self.args[1:]
         self.path = arguments[1]
 
         keywords = {
@@ -20,13 +23,21 @@ class main:
             "add":self.new_cards, 
             "study": self.study,
             "edit": self.edit,
+            "editor": self.set_editor,
             "reset": self.reset,
-            "reverse": self.reverse
+            "reverse": self.reverse,
+            "help": self.help
         }
         
+        hasfound = False
         for i,y in keywords.items():
             if self.testIfArgument(i, arguments[0], y):
+                hasfound = True
                 break
+
+        if not hasfound:
+            print("Option \"" + arguments[0] + "\" not found...\n")
+            self.help()
 
     def testIfArgument(self, arg, text, func):
         if arg == text:
@@ -78,6 +89,32 @@ class main:
         c = cardList()
         c.get(self.path)
         c.reverse(self.path)
+    
+    def set_editor(self):
+        c = cardList()
+        c.get(self.path)
+        c.standartTextEdit = self.args[3]
+        c.toDict()
+        c.save(self.path)
+    
+    def help(self):
+        print(self.args[0] + " new [filename]\n" + 
+              "        -> creates new flashcard-file\n" +
+              self.args[0] + " add [filename]\n" + 
+              "        -> add new flashcards to file\n" + 
+              self.args[0] + " study [filename]\n" + 
+              "        -> learn your flashcards\n" + 
+              self.args[0] + " edit [filename]\n" + 
+              "        -> edit flashcard-file inside your prefered text editor\n" + 
+              self.args[0] + " editor [filename] [editor]\n" +
+              "        -> set your prefered text editor for a file (default: vi)\n" + 
+              self.args[0] + " reset\n"
+              "        -> reset your statistics\n" + 
+              self.args[0] + " reverse\n" + 
+              "        -> solutions are now answers\n" + 
+              self.args[0] + " help\n" + 
+              "        -> shows this")
+
 
 class editClass:
     def __init__(self, path):
