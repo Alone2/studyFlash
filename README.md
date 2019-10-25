@@ -7,7 +7,7 @@ A python script to learn flashcards inside your terminal (for language learning)
    1. [Create Flashcard File](#create)
    2. [Add Cards](#add)
    3. [Import from Quizlet](#import)
-   5. [Study](#learn)
+   5. [Learn Cards](#learn)
    4. [Edit Cards](#edit)
    6. [Reset Statistics](#reset)
    7. [Replace Solution by Answers](#solution)
@@ -39,7 +39,7 @@ Creates a new file with cards from Quizlet.
 When the file already exists, the cards are going to be added to the existing ones.
 
 
-### Study Cards <a name="learn"></a>
+### Learn Cards <a name="learn"></a>
 ```
 ./study.py study FILENAME.json
 ```
