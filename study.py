@@ -11,6 +11,11 @@ class main:
 
         # Tests if arguments there
         if len(sys.argv) < 3:
+            if len(sys.argv) >= 2:
+                if sys.argv[1] == "help":
+                    print("Help: \n\n")
+                    self.help()
+                    return
             print("needs 2 arguments ( [action] [filename] )")
             self.help()
             return
@@ -98,21 +103,22 @@ class main:
         c.save(self.path)
     
     def help(self):
-        print(self.args[0] + " new [filename]\n" + 
+        name = self.args[0].split("/")[-1]
+        print(name + " new [filename]\n" + 
               "        -> creates new flashcard-file\n" +
-              self.args[0] + " add [filename]\n" + 
+              name + " add [filename]\n" + 
               "        -> add new flashcards to file\n" + 
-              self.args[0] + " study [filename]\n" + 
+              name + " study [filename]\n" + 
               "        -> learn your flashcards\n" + 
-              self.args[0] + " edit [filename]\n" + 
+              name + " edit [filename]\n" + 
               "        -> edit flashcard-file inside your prefered text editor\n" + 
-              self.args[0] + " editor [filename] [editor]\n" +
+              name + " editor [filename] [editor]\n" +
               "        -> set your prefered text editor for a file (default: vi)\n" + 
-              self.args[0] + " reset\n"
+              name + " reset\n"
               "        -> reset your statistics\n" + 
-              self.args[0] + " reverse\n" + 
+              name + " reverse\n" + 
               "        -> solutions are now answers\n" + 
-              self.args[0] + " help\n" + 
+              name + " help\n" + 
               "        -> shows this")
 
 
