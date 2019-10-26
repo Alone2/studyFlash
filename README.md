@@ -1,8 +1,10 @@
 
 # studyFlash
-A python script to learn flashcards inside your terminal (for language learning)
+A python application form learning flashcards inside your terminal (for language learning)
 
 ## Table of Contents
+1. [Installation](#installation)
+   1. [With pip](#pip)
 1. [Usage](#usage)
    1. [Create Flashcard File](#create)
    2. [Add Cards](#add)
@@ -12,11 +14,25 @@ A python script to learn flashcards inside your terminal (for language learning)
    6. [Reset Statistics](#reset)
    7. [Replace Solution by Answers](#solution)
 
+## Installation <a name="installation"></a>
+
+### With pip <a name="pip"></a>
+Clone the git repo and install the application: 
+```
+git clone https://github.com/Alone2/studyFlash.git
+sudo pip install ./studyFlash
+```
+
+Uninstall the application:
+```
+sudo pip uninstall studyFlash
+```
+
 ## Usage <a name="usage"></a>
 
 ### Create a Flashcard File (.json)  <a name="create"></a>
 ```
-./study.py new FILENAME.json
+studyFlash new FILENAME.json
 ```
 
 A file is being created. You can add your questions / solutions with ```./study.py add FILENAME.json``` or ```./study.py edit FILENAME.json``` (opens with text editor, default -> vim)
@@ -24,7 +40,7 @@ A file is being created. You can add your questions / solutions with ```./study.
 
 ### Add Cards to File  <a name="add"></a>
 ```
-./study.py add FILENAME.json
+studyFlash add FILENAME.json
 ```
 
 You need to type your questions / solutions
@@ -32,7 +48,7 @@ You need to type your questions / solutions
 
 ### Import Cards from Quizlet <a name="import"></a>
 ```
-./getFromQuizlet.py QUIZLET_LINK FILENAME.json
+studyFlash-quizlet QUIZLET_LINK FILENAME.json
 ```
 
 Creates a new file with cards from Quizlet. 
@@ -41,7 +57,7 @@ When the file already exists, the cards are going to be added to the existing on
 
 ### Learn Cards <a name="learn"></a>
 ```
-./study.py study FILENAME.json
+studyFlash study FILENAME.json
 ```
 
 The script now asks you your flashcards. 
@@ -55,7 +71,7 @@ If the number of you knowing the correct answer is bigger than of you not knowin
 
 ### Edit your Cards <a name="edit"></a>
 ```
-./study.py edit FILENAME.json
+studyFlash edit FILENAME.json
 ```
 
 Vim opens with all your cards in it. 
@@ -80,7 +96,7 @@ Something in another language
 ```
 ### Reset your Statistics  <a name="reset"></a>
 ```
-./study.py reset FILENAME.json
+studyFlash reset FILENAME.json
 ```
 
 The script resets the number of you knowing the correct/wrong answer, so you can start studying from scratch again.
@@ -88,7 +104,7 @@ The script resets the number of you knowing the correct/wrong answer, so you can
 
 ### Learn Words by Solution <a name="solution"></a>
 ```
-./study.py reverse FILENAME.json
+studyFlash reverse FILENAME.json
 ```
 
 Use that command if you want to switch your solutions with your anwsers.
