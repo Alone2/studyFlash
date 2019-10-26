@@ -7,6 +7,9 @@ from studyFlash import study
 
 class main:
     def __init__(self):
+        self.args = sys.argv
+        self.name = self.args[0].split("/")[-1]
+
         # Tests if arguments there
         if len(sys.argv) < 3:
             print("needs 2 arguments ( [quizlet link] [filename] )")
@@ -16,7 +19,7 @@ class main:
                   "        to the existing ones")
             return
         
-        arguments = sys.argv[1:]
+        arguments = self.args[1:]
         link = arguments[0]
         path = arguments[1]
 
@@ -31,7 +34,7 @@ class main:
         # save
         myCard.save(path)
 
-        print("Created file from Quizlet. Study: ./study.py study [FILENAME]")
+        print("Created file from Quizlet.\nStudy: ./study.py study [FILENAME]")
     
     # returns cards
     def cardsFromQuizlet(self, link, path):

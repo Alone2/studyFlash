@@ -108,11 +108,11 @@ class main:
               "        -> edit flashcard-file inside your prefered text editor\n" + 
               self.name + " editor [filename] [editor]\n" +
               "        -> set your prefered text editor for a file (default: vi)\n" + 
-              self.name + " reset\n"
+              self.name + " reset [filename]\n"
               "        -> reset your statistics\n" + 
-              self.name + " reverse\n" + 
+              self.name + " reverse [filename]\n" + 
               "        -> solutions are now answers\n" + 
-              self.name + " help\n" + 
+              self.name + " help [filename]\n" + 
               "        -> shows this")
 
 if __name__ == "__main__":
