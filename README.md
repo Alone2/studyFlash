@@ -1,6 +1,6 @@
 
 # studyFlash
-A python application form learning flashcards inside your terminal (for language learning)
+A python application for learning flashcards inside your terminal (for language learning)
 
 ## Table of Contents
 1. [Installation](#installation)
