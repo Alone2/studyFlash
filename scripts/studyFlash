@@ -1,0 +1,124 @@
+#!/bin/python3
+
+import sys
+from studyFlash import study
+
+class main:
+    def __init__(self):
+        self.args = sys.argv
+        self.default_editor = "vi"
+        self.name = self.args[0].split("/")[-1]
+
+        # Tests if arguments there
+        if len(sys.argv) < 3:
+            if len(sys.argv) >= 2:
+                if sys.argv[1] == "help":
+                    print("Help:\n")
+                    self.help()
+                    return
+            print("needs 2 arguments ( [action] [filename] )")
+            self.help()
+            return
+
+        arguments = self.args[1:]
+        self.path = arguments[1]
+
+        keywords = {
+            "new" : self.new_file, 
+            "add":self.new_cards, 
+            "study": self.study,
+            "edit": self.edit,
+            "editor": self.set_editor,
+            "reset": self.reset,
+            "reverse": self.reverse,
+            "help": self.help
+        }
+        
+        hasfound = False
+        for i,y in keywords.items():
+            if self.testIfArgument(i, arguments[0], y):
+                hasfound = True
+                break
+
+        if not hasfound:
+            print("Option \"" + arguments[0] + "\" not found...\n")
+            self.help()
+
+    def testIfArgument(self, arg, text, func):
+        if arg == text:
+            func()
+            return True
+
+    def new_file(self):
+        success = "File created, add cards by typing: " + self.name + " add [FILENAME]  or  ./study edit [FILENAME]"
+        study.cardList().new(self.path,success=success,editor=self.default_editor)
+        
+    def new_cards(self):
+        # Cards are taken out of file
+        cList = study.cardList()
+        cList.get(self.path)
+
+        print("You are in an endless cicle of typing questions / answers. Press ctrl+c to free yourself. Enjoy!\n")
+        
+        try:
+            while True:
+                question = input("Question: ")
+                solution = input("Solution: ")
+            
+                ca = study.card(question, solution)
+                cList.add_new(ca)
+                print()
+        except KeyboardInterrupt:
+            cList.save(self.path)
+
+    def study(self):
+        study.studyClass(self.path)
+
+    def reset(self):
+        c = study.cardList()
+        c.get(self.path)
+        c.reset(self.path)
+    
+    def edit(self):
+        all_words = "# When adding cards -> put them after the existing ones!\n"
+        all_words += "# Delete a card by replacing the question or solution with '###'\n"
+        all_words += "# Put an empty line between cards\n"
+        study.editClass(self.path, all_words, "Replace me with a real question", "Replace me with a real answer")
+
+    def reverse(self):
+        c = study.cardList()
+        c.get(self.path)
+        c.reverse(self.path)
+    
+    def set_editor(self):
+        c = study.cardList()
+        c.get(self.path)
+        c.standartTextEdit = self.args[3]
+        c.toDict()
+        c.save(self.path)
+    
+    def help(self):
+        print(self.name + " new [filename]\n" + 
+              "        -> creates new flashcard-file\n" +
+              self.name + " add [filename]\n" + 
+              "        -> add new flashcards to file\n" + 
+              self.name + " study [filename]\n" + 
+              "        -> learn your flashcards\n" + 
+              self.name + " edit [filename]\n" + 
+              "        -> edit flashcard-file inside your prefered text editor\n" + 
+              self.name + " editor [filename] [editor]\n" +
+              "        -> set your prefered text editor for a file (default: vi)\n" + 
+              self.name + " reset\n"
+              "        -> reset your statistics\n" + 
+              self.name + " reverse\n" + 
+              "        -> solutions are now answers\n" + 
+              self.name + " help\n" + 
+              "        -> shows this")
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        # Save exit comming soon!
+        print("\n")
+        sys.exit()

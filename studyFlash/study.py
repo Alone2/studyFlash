@@ -1,141 +1,24 @@
-#!/bin/python3
-
 import sys
 import json
 import os
 from pathlib import Path
 
-class main:
-    def __init__(self):
-        self.args = sys.argv
-
-        # Tests if arguments there
-        if len(sys.argv) < 3:
-            if len(sys.argv) >= 2:
-                if sys.argv[1] == "help":
-                    print("Help: \n\n")
-                    self.help()
-                    return
-            print("needs 2 arguments ( [action] [filename] )")
-            self.help()
-            return
-
-        arguments = self.args[1:]
-        self.path = arguments[1]
-
-        keywords = {
-            "new" : self.new_file, 
-            "add":self.new_cards, 
-            "study": self.study,
-            "edit": self.edit,
-            "editor": self.set_editor,
-            "reset": self.reset,
-            "reverse": self.reverse,
-            "help": self.help
-        }
-        
-        hasfound = False
-        for i,y in keywords.items():
-            if self.testIfArgument(i, arguments[0], y):
-                hasfound = True
-                break
-
-        if not hasfound:
-            print("Option \"" + arguments[0] + "\" not found...\n")
-            self.help()
-
-    def testIfArgument(self, arg, text, func):
-        if arg == text:
-            func()
-            return True
-
-    def new_file(self,path = ""):
-        if path:
-            self.path = path
-        p = Path(self.path)
-        if p.exists():
-            print("File is alredy here!")
-            return
-        f = open(self.path,"w+")
-        f.write(json.dumps({"cards":{}, "config":{"standartTextEditor":"vi"}}))
-        f.close()
-        print("File created, add cards by typing: ./study.py add [FILENAME]  or  ./study edit [FILENAME]")
-        
-    def new_cards(self):
-        # Cards are taken out of file
-        cList = cardList()
-        cList.get(self.path)
-
-        print("You are in an endless cicle of typing questions / answers. Press ctrl+c to free yourself. Enjoy!\n")
-        
-        try:
-            while True:
-                question = input("Question: ")
-                solution = input("Solution: ")
-            
-                ca = card(question, solution)
-                cList.add_new(ca)
-                print()
-        except KeyboardInterrupt:
-            cList.save(self.path)
-
-    def study(self):
-        studyClass(self.path)
-
-    def reset(self):
-        c = cardList()
-        c.get(self.path)
-        c.reset(self.path)
-    
-    def edit(self):
-        editClass(self.path)
-
-    def reverse(self):
-        c = cardList()
-        c.get(self.path)
-        c.reverse(self.path)
-    
-    def set_editor(self):
-        c = cardList()
-        c.get(self.path)
-        c.standartTextEdit = self.args[3]
-        c.toDict()
-        c.save(self.path)
-    
-    def help(self):
-        name = self.args[0].split("/")[-1]
-        print(name + " new [filename]\n" + 
-              "        -> creates new flashcard-file\n" +
-              name + " add [filename]\n" + 
-              "        -> add new flashcards to file\n" + 
-              name + " study [filename]\n" + 
-              "        -> learn your flashcards\n" + 
-              name + " edit [filename]\n" + 
-              "        -> edit flashcard-file inside your prefered text editor\n" + 
-              name + " editor [filename] [editor]\n" +
-              "        -> set your prefered text editor for a file (default: vi)\n" + 
-              name + " reset\n"
-              "        -> reset your statistics\n" + 
-              name + " reverse\n" + 
-              "        -> solutions are now answers\n" + 
-              name + " help\n" + 
-              "        -> shows this")
-
-
 class editClass:
-    def __init__(self, path):
+    def __init__(self, path, startComments, replaceQuestion, replaceAnswer):
         self.path = path
 
         self.c = cardList()
         self.c.get(self.path)
 
-        self.all_words = "# When adding cards -> put them after the existing ones!\n"
-        self.all_words += "# Delete a card by replacing the question or solution with '###'\n"
-        self.all_words += "# Put an empty line between cards\n"
+        self.all_words = startComments
+        self.all_words_newline_count = self.all_words.count("\n")
+
+        self.replaceQuestion = replaceQuestion
+        self.replaceAnswer = replaceAnswer
 
         # if no cards -> dummy cards
         if len(self.c) < 1:
-            a = card("Replace me with a real question", "Replace me with a real answer")
+            a = card(self.replaceQuestion, self.replaceAnswer)
             self.c.add_new(a)
         
         for i in self.c:
@@ -153,7 +36,7 @@ class editClass:
         cl = 0
         isError = False
         remove_from_list = []
-        for i in range(4, len(output), 3):
+        for i in range(self.all_words_newline_count + 1, len(output), 3):
             # If error
             if output[i] == "" or output[i+1] == "":
                 isError = True
@@ -347,14 +230,14 @@ class cardList(list):
         del self[index]
         del self.list[index]
 
-    def get(self, path):
+    def get(self, path, error="File not found!"):
         # open file, read
         try:
             jsonFile = open(path, 'r')
             data = json.loads(jsonFile.read())
             jsonFile.close()
         except FileNotFoundError:
-            print("File not found: create new with 'study.py new [FILENAME]'")
+            print(error)
             sys.exit()
         
         # create new cards with data
@@ -377,15 +260,26 @@ class cardList(list):
     def toDict(self):
         self.config["standartTextEditor"] = self.standartTextEdit
         
-    def save(self, path, output = True):
+    def save(self, path, output = True, outputTxt = "saved..."):
         if output:
-            print("\nsaved...")
+            print("\n" + outputTxt)
         # open file, write
         dataJSON = json.dumps({"cards":self.list, "config":self.config}, indent=2)
         jsonFile = open(path, 'w')
         jsonFile.write(dataJSON)
         jsonFile.close()
 
+    def new(self, path, success = "", errormsg = "File is alredy here!", editor = "vi"):
+        if path:
+            self.path = path
+        p = Path(self.path)
+        if p.exists():
+            print(errormsg)
+            return
+        f = open(self.path,"w+")
+        f.write(json.dumps({"cards":{}, "config":{"standartTextEditor":editor}}))
+        f.close()
+        print(success)
     
     def reverse(self, path):
         for i in self:
@@ -399,11 +293,3 @@ class cardList(list):
             i.timesPlayed = 0
             i.toDict()
         self.save(path)
-
-if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        # Save exit comming soon!
-        print("\n")
-        sys.exit()

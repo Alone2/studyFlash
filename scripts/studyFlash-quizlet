@@ -2,16 +2,18 @@
 
 import sys
 import json
-import os
-from pathlib import Path
 import urllib.request
-import study
+from studyFlash import study
 
 class main:
     def __init__(self):
         # Tests if arguments there
         if len(sys.argv) < 3:
             print("needs 2 arguments ( [quizlet link] [filename] )")
+            print("     -> creates a flashcards file with the name [filename]\n"+
+                  "        out of the flashcards from the [quizlet link]")
+            print("     -> when the file already exists it appends the flashcards\n"+
+                  "        to the existing ones")
             return
         
         arguments = sys.argv[1:]
@@ -19,18 +21,13 @@ class main:
         path = arguments[1]
 
         # new file
-        main = study.main()
-        main.new_file(path)
+        study.cardList().new(path)
         # new Card from Quizlet
         myCard = self.cardsFromQuizlet(link, path)
         # save
         myCard.save(path)
 
         print("Created file from Quizlet. Study: ./study.py study [FILENAME]")
-  
-        # get between window.Quizlet.setPageData = {  und }
-        # need urllib
-        # to save card maybe import other script
     
     # returns cards
     def cardsFromQuizlet(self, link, path):
