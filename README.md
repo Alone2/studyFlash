@@ -32,7 +32,7 @@ sudo pip uninstall studyFlash
 
 ### Create a Flashcard File (.json)  <a name="create"></a>
 ```
-studyFlash new FILENAME.json
+studyflash new FILENAME.json
 ```
 
 A file is being created. You can add your questions / solutions with ```./study.py add FILENAME.json``` or ```./study.py edit FILENAME.json``` (opens with text editor, default -> vim)
@@ -40,7 +40,7 @@ A file is being created. You can add your questions / solutions with ```./study.
 
 ### Add Cards to File  <a name="add"></a>
 ```
-studyFlash add FILENAME.json
+studyflash add FILENAME.json
 ```
 
 You need to type your questions / solutions
@@ -48,7 +48,7 @@ You need to type your questions / solutions
 
 ### Import Cards from Quizlet <a name="import"></a>
 ```
-studyFlash-quizlet QUIZLET_LINK FILENAME.json
+studyflash-quizlet QUIZLET_LINK FILENAME.json
 ```
 
 Creates a new file with cards from Quizlet. 
@@ -57,7 +57,7 @@ When the file already exists, the cards are going to be added to the existing on
 
 ### Learn Cards <a name="learn"></a>
 ```
-studyFlash study FILENAME.json
+studyflash study FILENAME.json
 ```
 
 The script now asks you your flashcards. 
@@ -71,7 +71,7 @@ If the number of you knowing the correct answer is bigger than of you not knowin
 
 ### Edit your Cards <a name="edit"></a>
 ```
-studyFlash edit FILENAME.json
+studyflash edit FILENAME.json
 ```
 
 Vim opens with all your cards in it. 
@@ -96,7 +96,7 @@ Something in another language
 ```
 ### Reset your Statistics  <a name="reset"></a>
 ```
-studyFlash reset FILENAME.json
+studyflash reset FILENAME.json
 ```
 
 The script resets the number of you knowing the correct/wrong answer, so you can start studying from scratch again.
@@ -104,7 +104,7 @@ The script resets the number of you knowing the correct/wrong answer, so you can
 
 ### Learn Words by Solution <a name="solution"></a>
 ```
-studyFlash reverse FILENAME.json
+studyflash reverse FILENAME.json
 ```
 
 Use that command if you want to switch your solutions with your anwsers.
