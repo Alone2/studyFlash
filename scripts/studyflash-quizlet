@@ -14,7 +14,7 @@ class main:
         if len(sys.argv) < 3:
             print("needs 2 arguments ( [quizlet link] [filename] )")
             print("     -> creates a flashcards file with the name [filename]\n"+
-                  "        out of the flashcards from the [quizlet link]")
+                  "        out of the flashcards from [quizlet link]")
             print("     -> when the file already exists it appends the flashcards\n"+
                   "        to the existing ones")
             return
