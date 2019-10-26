@@ -21,9 +21,13 @@ class main:
         path = arguments[1]
 
         # new file
-        study.cardList().new(path)
+        study.cardList().new(path, errormsg="File is alredy here.\nAppending flashcards to existing ones...")
         # new Card from Quizlet
-        myCard = self.cardsFromQuizlet(link, path)
+        try:
+            myCard = self.cardsFromQuizlet(link, path)
+        except Exception:
+            print("Error: Wasn't able to get data from Quizlet")
+            return
         # save
         myCard.save(path)
 
