@@ -23,6 +23,9 @@ Clone the git repo and install the application:
 git clone https://github.com/Alone2/studyFlash.git
 sudo pip install ./studyFlash
 ```
+When the command above returns an error message you can also try: 
+
+```sudo pip3  install ./studyFlash``` or ```sudo python3 -m  install ./studyFlash``` 
 
 Uninstall the application:
 ```
