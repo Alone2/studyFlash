@@ -25,7 +25,7 @@ sudo pip install ./studyFlash
 ```
 When the command above returns an error message you can also try: 
 
-```sudo pip3  install ./studyFlash``` or ```sudo python3 -m  install ./studyFlash``` 
+```sudo pip3 install ./studyFlash``` or ```sudo python3 -m pip install ./studyFlash``` 
 
 Uninstall the application:
 ```
