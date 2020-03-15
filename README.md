@@ -72,7 +72,7 @@ When the file already exists, the cards are going to be added to the existing on
 studyflash study FILENAME.json
 ```
 
-The script now asks you your flashcards. 
+The script now asks you for your flashcards. 
 You need to type them correctly.
 If made a typo you can press "r" to count your answer as correct.
 
