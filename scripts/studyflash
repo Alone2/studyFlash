@@ -16,7 +16,7 @@ class main:
                     print("Help:\n")
                     self.help()
                     return
-            print("needs 2 arguments ( [action] [filename] )")
+            print("needs 2 arguments ( [action] [filename] )\n")
             self.help()
             return
 
@@ -112,7 +112,7 @@ class main:
               "        -> reset your statistics\n" + 
               self.name + " reverse [filename]\n" + 
               "        -> solutions are now answers\n" + 
-              self.name + " help [filename]\n" + 
+              self.name + " help\n" + 
               "        -> shows this")
 
 if __name__ == "__main__":

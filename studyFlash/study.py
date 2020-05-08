@@ -149,8 +149,8 @@ class studyClass:
                 # if really incorrect 
                     self.retypeUntilCorrect(i.solution)
             
-            # When times the word was correct is bigger than incorrect -> user knows the word
-            if i.timesCorrect > i.timesIncorrect:
+            # Test if user knows the word
+            if self.isKnown(i):
                 self.isKnownList[num] = True
             
             # Saves everything
@@ -159,9 +159,12 @@ class studyClass:
         # repeats itself
         self.evilLoop()
     
-    def isKnown(self, i):
-        # very complex algorithm
-        if i.timesCorrect > i.timesIncorrect and i.timesCorrect > 2:
+    def isKnown(self, myCard):
+        # "algorithm" (later on: customizable)
+        # When times the word was anwered correctly is bigger than incorrectly -> user knows the word
+        # Usable stuff: timesPlayed, timesCorrect, timesIncorrect
+        # (TODO:) Maybe add: streak 
+        if myCard.timesCorrect > myCard.timesIncorrect and myCard.timesCorrect > 2:
             return True
         return False
     
@@ -177,7 +180,7 @@ class studyClass:
 
 
 class card:
-    def __init__(self, text, solution, timesCorrect = 0, timesIncorrect = 0, timesPlayed = 0):
+    def __init__(self, text, solution, timesCorrect = 0, timesIncorrect = 0, timesPlayed = 0, streak = 0):
         self.dict = {}
 
         self.text = text
@@ -185,6 +188,8 @@ class card:
         self.timesCorrect = timesCorrect
         self.timesIncorrect = timesIncorrect
         self.timesPlayed = timesPlayed
+        self.streak = streak
+        self.streakBefore = streak
 
         self.toDict()
 
@@ -194,21 +199,26 @@ class card:
         self.dict["timesCorrect"] = self.timesCorrect
         self.dict["timesIncorrect"] = self.timesIncorrect
         self.dict["timesPlayed"] = self.timesPlayed
+        self.dict["streak"] = self.streak
     
     def guess(self, text):
         self.timesPlayed += 1
         if text == self.solution:
             self.timesCorrect += 1
+            self.streakBefore = self.streak
+            self.streak += 1
             self.toDict()
             return True
         else:
             self.timesIncorrect += 1
+            self.streak = 0
             self.toDict()
             return False
 
     def reverseGuess(self):
         self.timesIncorrect -= 1 
         self.timesCorrect += 1
+        self.streak = self.streakBefore
 
     def reverse(self):
         t = self.text 
