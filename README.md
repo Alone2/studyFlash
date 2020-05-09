@@ -108,10 +108,13 @@ Something
 Something in another language
 ```
 ### Shuffle your Cards  <a name="shuffle"></a>
-You can ether shuffle your cards manually  with```studyflash shuffle FILENAME.json``` 
-or enable automatic shuffling: ```studyflash shuffle-auto FILENAME.json``` 
+You can either shuffle your cards manually  with```studyflash shuffle FILENAME.json``` 
+or enable automatic shuffling: 
+```
+studyflash shuffle-auto FILENAME.json
+```
 
-Once enabled, you can disable automatic shuffling it like this: ```studyflash shuffle-manual FILENAME.json``` 
+Once enabled, you can disable automatic shuffling like this: ```studyflash shuffle-manual FILENAME.json``` 
 
 ### Reset your Statistics  <a name="reset"></a>
 ```
