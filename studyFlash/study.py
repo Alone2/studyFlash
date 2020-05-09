@@ -167,12 +167,14 @@ class studyClass:
                 print("You know every word! \nUsing 'studyflash reset FILENAME' you can reset your statistics and begin once again!")
                 break
     
-    def isKnown(self, myCard):
-        # "algorithm" (later on: customizable)
-        # When times the word was anwered correctly is bigger than incorrectly -> user knows the word
-        # Usable stuff: timesPlayed, timesCorrect, timesIncorrect
-        # (TODO:) Maybe add: streak 
-        if myCard.timesCorrect > myCard.timesIncorrect and myCard.timesCorrect > 2:
+    def isKnown(self, card):
+        # customizable algorithm
+        # myCard.timesCorrect > myCard.timesIncorrect and myCard.timesCorrect > 2:
+        req = "ctest = (" + self.cardList.correcttest + ")" 
+        ldict = {"card":card}
+        exec(req, globals(), ldict)
+        ctest = ldict['ctest']
+        if ctest:
             return True
         return False
     
@@ -266,10 +268,12 @@ class cardList(list):
             c = i["timesCorrect"]
             ic = i["timesIncorrect"]
             tp = i["timesPlayed"]
-            
-            # streak isn't implemented here
+            try:
+                st = i["streak"]
+            except:
+                st = 0
 
-            newCard = card(t, s, c, ic, tp)
+            newCard = card(t, s, c, ic, tp, st)
             self.add_new(newCard)
         
         self.__change_config(data["config"])
@@ -279,12 +283,35 @@ class cardList(list):
         self.standartTextEdit = config["standartTextEditor"]
         try:
             self.autoshuffle = config["shuffle"]
+            self.correcttest = config["correcttest"]
         except:
             self.autoshuffle = False
+            self.correcttest = "# Syntax: A python boolean is defined\n"
+            self.correcttest += "# You can use 'and' and 'or' to combine statements (see example 2)\n"
+            self.correcttest += "\n# Parameters you can use:\n"
+            self.correcttest += "# cards.timesCorrect: How many times youre answer was correct\n"
+            self.correcttest += "# cards.timesIncorrect: How many times youre answer was incorrect\n"
+            self.correcttest += "# cards.timesPlayed: How many times you ansered the question\n"
+            self.correcttest += "# cards.streak: Youre current streak on how many times you're answer correct.\n"
+            self.correcttest += "\n# Example 1: \n"
+            self.correcttest += "# card.streak > 2\n"
+            self.correcttest += "# Explanation: Card needs to be guessed correctly more than 3 times in a row:\n"
+            self.correcttest += "# for it to not appear anymore and be marked as known\n"
+            self.correcttest += "\n# Example 2 ():\n"
+            self.correcttest += "# card.timesCorrect > card.timesIncorrect and card.timesCorrect > 2\n"
+            self.correcttest += "# Explanation: You need to have guessed the card correctly more times than you guessed it incorecctly\n"
+            self.correcttest += "# and the card has to be answered correctly more than 2 times for it to not appear again.\n"
+            self.correcttest += "\n# Example 3: \n"
+            self.correcttest += "# False\n"
+            self.correcttest += "# Explanation: Never sort a card out. Every card will be asked everytime \n"
+            self.correcttest += "# even if you answered the question correctly 100x times. \n"
+            self.correcttest += "\n# Current configuration: You need to have a streak of more or equal to 2"
+            self.correcttest += "# and need to have answered the question correctly at least 3 times:"
+            self.correcttest += "card.timesCorrect > 2 and card.streak >= 2"
         self.__set_config()
     
     def __set_config(self):
-        self.config = {"standartTextEditor":self.standartTextEdit, "shuffle":self.autoshuffle}
+        self.config = {"standartTextEditor":self.standartTextEdit, "shuffle":self.autoshuffle, "correcttest":self.correcttest}
 
     def toDict(self):
         self.config["standartTextEditor"] = self.standartTextEdit
