@@ -5,6 +5,7 @@ A python application for learning flashcards inside your terminal (for language 
 ## Table of Contents
 1. [Installation](#installation)
    1. [With pip](#pip)
+   1. [Arch Linux (AUR)](#aur)
 1. [Usage](#usage)
    1. [Create Flashcard File](#create)
    2. [Add Cards](#add)
@@ -22,11 +23,22 @@ Clone the git repo and install the application:
 git clone https://github.com/Alone2/studyFlash.git
 sudo pip install ./studyFlash
 ```
+When the command above returns an error message you can also try: 
+
+```sudo pip3 install ./studyFlash``` or ```sudo python3 -m pip install ./studyFlash``` 
 
 Uninstall the application:
 ```
 sudo pip uninstall studyFlash
 ```
+### Arch Linux (AUR) <a name="aur"></a>
+studyFlash is in the AUR ([link](https://aur.archlinux.org/packages/studyflash/))
+
+Install it [manually](https://wiki.archlinux.org/index.php/Arch_User_Repository#Installing_packages) or with your favorite AUR helper:
+```
+yay -S studyflash
+```
+
 
 ## Usage <a name="usage"></a>
 
@@ -60,7 +72,7 @@ When the file already exists, the cards are going to be added to the existing on
 studyflash study FILENAME.json
 ```
 
-The script now asks you your flashcards. 
+The script now asks you for your flashcards. 
 You need to type them correctly.
 If made a typo you can press "r" to count your answer as correct.
 
