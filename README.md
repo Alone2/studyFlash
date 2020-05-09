@@ -12,6 +12,7 @@ A python application for learning flashcards inside your terminal (for language 
    3. [Import from Quizlet](#import)
    5. [Learn Cards](#learn)
    4. [Edit Cards](#edit)
+   4. [Shuffle Cards](#shuffle)
    6. [Reset Statistics](#reset)
    7. [Replace Solution by Answers](#solution)
 
@@ -106,6 +107,12 @@ Schildkröte
 Something 
 Something in another language
 ```
+### Shuffle your Cards  <a name="shuffle"></a>
+You can ether shuffle your cards manually  with```studyflash shuffle FILENAME.json``` 
+or enable automatic shuffling: ```studyflash shuffle-auto FILENAME.json``` 
+
+Once enabled, you can disable automatic shuffling it like this: ```studyflash shuffle-manual FILENAME.json``` 
+
 ### Reset your Statistics  <a name="reset"></a>
 ```
 studyflash reset FILENAME.json
