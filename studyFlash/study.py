@@ -286,7 +286,10 @@ class cardList(list):
             self.correcttest = config["correcttest"]
         except:
             self.autoshuffle = False
-            self.correcttest = "# Syntax: A python boolean is defined\n"
+            self.correcttest = "# It is defined here when a card counts as mastered and will \n"
+            self.correcttest += "# not be asked again. \n"
+            self.correcttest += "# (reset statistics to study cards again with: 'studyflash reset FILENAME')\n"
+            self.correcttest += "\n# Syntax: A python boolean is defined\n"
             self.correcttest += "# You can use 'and' and 'or' to combine statements (see example 2)\n"
             self.correcttest += "\n# Parameters you can use:\n"
             self.correcttest += "# cards.timesCorrect: How many times youre answer was correct\n"
@@ -296,7 +299,7 @@ class cardList(list):
             self.correcttest += "\n# Example 1: \n"
             self.correcttest += "# card.streak > 2\n"
             self.correcttest += "# Explanation: Card needs to be guessed correctly more than 3 times in a row:\n"
-            self.correcttest += "# for it to not appear anymore and be marked as known\n"
+            self.correcttest += "# for it to not appear anymore and be marked as mastered\n"
             self.correcttest += "\n# Example 2 ():\n"
             self.correcttest += "# card.timesCorrect > card.timesIncorrect and card.timesCorrect > 2\n"
             self.correcttest += "# Explanation: You need to have guessed the card correctly more times than you guessed it incorecctly\n"

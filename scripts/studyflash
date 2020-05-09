@@ -77,6 +77,7 @@ class main:
             cList.save(self.path)
 
     def study(self):
+        print("Escape with ctrl+c. Your progress will be saved")
         study.studyClass(self.path)
 
     def reset(self):
