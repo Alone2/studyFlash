@@ -53,7 +53,7 @@ A file is being created. You can add your questions / solutions with ```./study.
 
 
 ### Add Cards to File  <a name="add"></a>
-NOTE: It is recommended to use [edit](#edit) for adding cardsm, because you [cannot fix typos](https://github.com/Alone2/studyFlash/issues/2#issuecomment-626209501) 
+NOTE: It is recommended to use [edit](#edit) for adding cards, because you currently [cannot fix typos](https://github.com/Alone2/studyFlash/issues/2#issuecomment-626209501) with add.
 ```
 studyflash add FILENAME.json
 ```
