@@ -5,6 +5,7 @@ import json
 import urllib.request
 from studyFlash import study
 
+
 class main:
     def __init__(self):
         self.args = sys.argv
@@ -13,37 +14,46 @@ class main:
         # Tests if arguments there
         if len(sys.argv) < 3:
             print("needs 2 arguments ( [quizlet link] [filename] )")
-            print("     -> creates a flashcards file with the name [filename]\n"+
+            print("     -> creates a flashcards file with the name [filename]\n" +
                   "        out of the flashcards from [quizlet link]")
-            print("     -> when the file already exists it appends the flashcards\n"+
+            print("     -> when the file already exists it appends the flashcards\n" +
                   "        to the existing ones")
             return
-        
+
         arguments = self.args[1:]
         link = arguments[0]
         path = arguments[1]
 
         # new file
-        study.cardList().new(path, errormsg="File is alredy here.\nAppending flashcards to existing ones...")
+        study.cardList().new(
+            path, errormsg="File is alredy here.\nAppending flashcards to existing ones...")
         # new Card from Quizlet
-        try:
-            myCard = self.cardsFromQuizlet(link, path)
-        except Exception:
-            print("Error: Wasn't able to get data from Quizlet")
-            return
+        # try:
+        # myCard = self.cardsFromQuizlet(link, path)
+        myCard = self.cardsFromQuizlet(link, path)
+        # except Exception:
+        # print("Error: Wasn't able to get data from Quizlet")
+        # return
         # save
         myCard.save(path)
 
-        print("Created file from Quizlet.\nStudy: " + self.studyFlashName + " study [FILENAME]")
-    
+        print("Created file from Quizlet.\nStudy: " +
+              self.studyFlashName + " study [FILENAME]")
+
     # returns cards
     def cardsFromQuizlet(self, link, path):
         # get from website
-        html = str(urllib.request.urlopen(link).read().decode("utf-8"))
-        find1String = "window.Quizlet.setPageData = "
+        r = urllib.request.Request(
+            url=link,
+            headers={
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:76.0) Gecko/20100101 Firefox/76.0'
+            }
+        )
+        html = str(urllib.request.urlopen(r).read().decode("utf-8"))
+        find1String = "window.Quizlet[\"setPageData\"] = "
         found1 = html.find(find1String)
         html = html[found1 + len(find1String):]
-        found2 = html.find("; QLoad('Quizlet.setPageData');")
+        found2 = html.find("; QLoad(\"Quizlet.setPageData\");")
         html = html[:found2]
 
         # to array
@@ -54,7 +64,7 @@ class main:
         #print(json.dumps(jsonData["termIdToTermsMap"], indent=3))
         cards = study.cardList()
         cards.get(path)
-        for key,value in jsonData["termIdToTermsMap"].items():
+        for key, value in jsonData["termIdToTermsMap"].items():
             #print(key, value)
             c = study.card(value["word"], value["definition"])
             cards.add_new(c)
