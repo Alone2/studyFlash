@@ -12,6 +12,7 @@ A python application for learning flashcards inside your terminal (for language 
    3. [Import from Quizlet](#import)
    5. [Learn Cards](#learn)
    4. [Edit Cards](#edit)
+   4. [Change Default Editor](#editor)
    4. [Shuffle Cards](#shuffle)
    6. [Reset Statistics](#reset)
    7. [Replace Solution by Answers](#solution)
@@ -52,6 +53,7 @@ A file is being created. You can add your questions / solutions with ```./study.
 
 
 ### Add Cards to File  <a name="add"></a>
+NOTE: It is recommended to use [edit](#edit) for adding cardsm, because you [cannot fix typos](https://github.com/Alone2/studyFlash/issues/2#issuecomment-626209501) 
 ```
 studyflash add FILENAME.json
 ```
@@ -87,9 +89,11 @@ If the number of you knowing the correct answer is bigger than of you not knowin
 studyflash edit FILENAME.json
 ```
 
-Vim opens with all your cards in it. 
+Vi opens with all your cards in it. (Vi can be difficult for beginners. Change your editor like [this](#editor))
+
 You can change all the answers/questions of your flashcards. 
 Deleting a card by renaming the answer/question to '###' is also possible.
+
 You can also add cards by adding them at **the end** of the document.
 
 Here an example file with 3 cards in it:
@@ -107,6 +111,17 @@ Schildkröte
 Something 
 Something in another language
 ```
+
+### Change your Default Editor <a name="editor"></a>
+Change your editor from vi to something different. 
+```
+studyflash editor FILENAME.json EDITOR
+```
+I suggest to use nano, if you're a beginner:
+```
+studyflash editor FILENAME.json nano
+```
+
 ### Shuffle your Cards  <a name="shuffle"></a>
 You can either shuffle your cards manually  with```studyflash shuffle FILENAME.json``` 
 or enable automatic shuffling: 
