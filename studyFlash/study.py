@@ -4,13 +4,69 @@ import os
 import random
 from pathlib import Path
 
-class editClass:
-    def __init__(self, path, startComments, replaceQuestion, replaceAnswer):
+class editParent:
+    def __init__(self, path):
+        # get card
         self.path = path
-
         self.c = cardList()
         self.c.get(self.path)
+        self.ending = ".tempWords"
 
+    def _errorHandling(self, retryfunc):
+        a = input("Formattig error, type \"r\" to re-edit file, \"d\" to discard changes, \"s\" to save as temp file ")
+        # rewrite stuff
+        if a == "r":
+            self.originalOutput = self._getUserInput(self.originalOutput)
+            retryfunc()
+    
+            sys.exit()
+        # just close
+        if a == "d":
+            sys.exit()
+        # save everything
+        if a == "s":
+            self._saveFile(input("Filename to save: "), self.originalOutput)
+            sys.exit()
+
+        self._errorHandling(retryfunc)
+    
+    def _getUserInput(self, all_words):
+        # open temp file 
+        cur_path = self.path + self.ending
+        self._saveFile(cur_path, all_words)
+        
+        # user can chage file
+        os.system(self.c.standartTextEdit + " " + cur_path)
+
+        # read temp file after user input
+        f = open(cur_path, "r")
+        originalOutput = f.read()
+        f.close()
+
+        os.remove(cur_path)
+
+        return originalOutput
+
+    @staticmethod
+    def _saveFile(path, text):
+        f = open(path, "w+")
+        f.write(text)
+        f.close()
+
+class editTestCorrect(editParent):
+    def __init__(self, path):
+        super().__init__(path)
+        self.ending = ".tempwords.py"
+        self.testcase = self.c.correcttest
+        # Get user input
+        self.originalOutput = self._getUserInput(self.testcase)
+        self.c.correcttest = self.originalOutput
+        # Save
+        self.c.save(self.path)
+
+class editClass(editParent):
+    def __init__(self, path, startComments, replaceQuestion, replaceAnswer):
+        super().__init__(path)
         self.all_words = startComments
         self.all_words_newline_count = self.all_words.count("\n")
 
@@ -27,7 +83,7 @@ class editClass:
         self.oldOutput = self.all_words.split("\n")
         
         # Get user input
-        self.originalOutput = self.__getUserInput(self.all_words)
+        self.originalOutput = self._getUserInput(self.all_words)
         # Save input
         self.checkOutput()
     
@@ -57,7 +113,7 @@ class editClass:
             cl += 1
         # if error
         if isError:
-            self.__errorHandling()
+            self._errorHandling(self._getUserInput(self.originalOutput))
             return
         # remove from list
         minus = 0
@@ -66,47 +122,6 @@ class editClass:
             minus += 1
         # save
         self.c.save(self.path)
-    
-    def __errorHandling(self):
-        a = input("Formattig error, type \"r\" to re-edit file, \"d\" to discard changes, \"s\" to save as temp file ")
-        # rewrite stuff
-        if a == "r":
-            self.originalOutput = self.__getUserInput(self.originalOutput)
-            self.checkOutput()
-    
-            sys.exit()
-        # just close
-        if a == "d":
-            sys.exit()
-        # save everything
-        if a == "s":
-            self.__saveFile(input("Filename to save: "), self.originalOutput)
-            sys.exit()
-
-        self.__errorHandling()
-    
-    def __getUserInput(self, all_words):
-        # open temp file 
-        cur_path = self.path + ".tempWords"
-        self.__saveFile(cur_path, all_words)
-        
-        # user can chage file
-        os.system(self.c.standartTextEdit + " " + cur_path)
-
-        # read temp file after user input
-        f = open(cur_path, "r")
-        originalOutput = f.read()
-        f.close()
-
-        os.remove(cur_path)
-
-        return originalOutput
-
-    @staticmethod
-    def __saveFile(path, text):
-        f = open(path, "w+")
-        f.write(text)
-        f.close()
 
 class studyClass:
     def __init__(self, path):
@@ -164,7 +179,7 @@ class studyClass:
                 self.cardList.save(self.path, False)
             # Checks if user knows every word 
             if knownNumber >= len(self.cardList):
-                print("You know every word! \nUsing 'studyflash reset FILENAME' you can reset your statistics and begin once again!")
+                print("Congratulations! You mastered every card! \nUsing 'studyflash reset FILENAME' you can reset your statistics and begin once again!")
                 break
     
     def isKnown(self, card):
@@ -172,7 +187,12 @@ class studyClass:
         # myCard.timesCorrect > myCard.timesIncorrect and myCard.timesCorrect > 2:
         req = "ctest = (" + self.cardList.correcttest + ")" 
         ldict = {"card":card}
-        exec(req, globals(), ldict)
+        try:
+            exec(req, globals(), ldict)
+        except :
+            print("Your condition for knowing if a card is mastered has an error.")
+            print("Change it using: studyflash condition FILENAME")
+            sys.exit()
         ctest = ldict['ctest']
         if ctest:
             return True
@@ -308,8 +328,8 @@ class cardList(list):
             self.correcttest += "# False\n"
             self.correcttest += "# Explanation: Never sort a card out. Every card will be asked everytime \n"
             self.correcttest += "# even if you answered the question correctly 100x times. \n"
-            self.correcttest += "\n# Current configuration: You need to have a streak of more or equal to 2"
-            self.correcttest += "# and need to have answered the question correctly at least 3 times:"
+            self.correcttest += "\n# Current configuration: You need to have a streak of more or equal to 2\n"
+            self.correcttest += "# and need to have answered the question correctly at least 3 times:\n"
             self.correcttest += "card.timesCorrect > 2 and card.streak >= 2"
         self.__set_config()
     

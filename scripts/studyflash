@@ -32,6 +32,7 @@ class main:
             "editor": self.set_editor,
             "reset": self.reset,
             "reverse": self.reverse,
+            "condition": self.condition,
             "shuffle-auto": self.shuffle_auto,
             "shuffle-manual": self.shuffle_stop,
             "shuffle": self.shuffle,
@@ -91,6 +92,9 @@ class main:
         all_words += "# Put an empty line between cards\n"
         study.editClass(self.path, all_words, "Replace me with a real question",
                         "Replace me with a real answer")
+    
+    def condition(self):
+        study.editTestCorrect(self.path)
 
     def reverse(self):
         c = study.cardList()
@@ -134,6 +138,8 @@ class main:
               "        -> set your prefered text editor for a file (default: vi)\n" +
               self.name + " reset [filename]\n"
               "        -> reset your statistics\n" +
+              self.name + " condition [filename]\n"
+              "        -> Define when a cards counts as mastered\n" +
               self.name + " shuffle [filename]\n"
               "        -> shuffles your cards\n" +
               self.name + " shuffle-auto [filename]\n"
