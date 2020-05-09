@@ -14,6 +14,7 @@ A python application for learning flashcards inside your terminal (for language 
    4. [Edit Cards](#edit)
    4. [Change Default Editor](#editor)
    4. [Shuffle Cards](#shuffle)
+   4. [Condition for Card to be Mastered](#mastered)
    6. [Reset Statistics](#reset)
    7. [Replace Solution by Answers](#solution)
 
@@ -130,6 +131,47 @@ studyflash shuffle-auto FILENAME.json
 ```
 
 Once enabled, you can disable automatic shuffling like this: ```studyflash shuffle-manual FILENAME.json``` 
+
+### Condition for Card to be Mastered <a name="mastered"></a>
+You can configure if when a card will no longer appear and is mastered using:
+```
+studyflash condition FILENAME.json
+```
+
+The following explanation will appear. You can change the last line to your liking to configure when a card counts as mastered:
+```
+# It is defined here when a card counts as mastered and will 
+# not be asked again. 
+# (reset statistics to study cards again with: 'studyflash reset FILENAME')
+
+# Syntax: A python boolean is defined
+# You can use 'and' and 'or' to combine statements (see example 2)
+
+# Parameters you can use:
+# cards.timesCorrect: How many times your answer was correct
+# cards.timesIncorrect: How many times your answer was incorrect
+# cards.timesPlayed: How many times you answered the question
+# cards.streak: Your current streak on how many times you're answer was correct.
+
+# Example 1: 
+# card.streak > 2
+# Explanation: Card needs to be guessed correctly more than 3 times in a row:
+# for it to not appear anymore and be marked as mastered
+
+# Example 2 ():
+# card.timesCorrect > card.timesIncorrect and card.timesCorrect > 2
+# Explanation: You need to have guessed the card correctly more times than you guessed it incorrectly
+# and the card has to be answered correctly more than 2 times for it to not appear again.
+
+# Example 3: 
+# False
+# Explanation: Never sort a card out. Every card will be asked everytime 
+# even if you answered the question correctly 100x times. 
+
+# Current configuration: You need to have a streak of more or equal to 2
+# and need to have answered the question correctly at least 3 times:
+card.timesCorrect > 2 and card.streak >= 2
+```
 
 ### Reset your Statistics  <a name="reset"></a>
 ```
