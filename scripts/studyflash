@@ -3,6 +3,7 @@
 import sys
 from studyFlash import study
 
+
 class main:
     def __init__(self):
         self.args = sys.argv
@@ -24,18 +25,21 @@ class main:
         self.path = arguments[1]
 
         keywords = {
-            "new" : self.new_file, 
-            "add":self.new_cards, 
+            "new": self.new_file,
+            "add": self.new_cards,
             "study": self.study,
             "edit": self.edit,
             "editor": self.set_editor,
             "reset": self.reset,
             "reverse": self.reverse,
+            "shuffle-auto": self.shuffle_auto,
+            "shuffle-manual": self.shuffle_stop,
+            "shuffle": self.shuffle,
             "help": self.help
         }
-        
+
         hasfound = False
-        for i,y in keywords.items():
+        for i, y in keywords.items():
             if self.testIfArgument(i, arguments[0], y):
                 hasfound = True
                 break
@@ -50,21 +54,22 @@ class main:
             return True
 
     def new_file(self):
-        success = "File created, add cards by typing: " + self.name + " add [FILENAME]  or  ./study edit [FILENAME]"
-        study.cardList().new(self.path,success=success,editor=self.default_editor)
-        
+        success = "File created, add cards by typing: " + \
+            self.name + " add [FILENAME]  or  ./study edit [FILENAME]"
+        study.cardList().new(self.path, success=success, editor=self.default_editor)
+
     def new_cards(self):
         # Cards are taken out of file
         cList = study.cardList()
         cList.get(self.path)
 
         print("You are in an endless cicle of typing questions / answers. Press ctrl+c to free yourself. Enjoy!\n")
-        
+
         try:
             while True:
                 question = input("Question: ")
                 solution = input("Solution: ")
-            
+
                 ca = study.card(question, solution)
                 cList.add_new(ca)
                 print()
@@ -78,42 +83,67 @@ class main:
         c = study.cardList()
         c.get(self.path)
         c.reset(self.path)
-    
+
     def edit(self):
         all_words = "# When adding cards -> put them after the existing ones!\n"
         all_words += "# Delete a card by replacing the question or solution with '###'\n"
         all_words += "# Put an empty line between cards\n"
-        study.editClass(self.path, all_words, "Replace me with a real question", "Replace me with a real answer")
+        study.editClass(self.path, all_words, "Replace me with a real question",
+                        "Replace me with a real answer")
 
     def reverse(self):
         c = study.cardList()
         c.get(self.path)
         c.reverse(self.path)
-    
+
+    def shuffle(self):
+        c = study.cardList()
+        c.get(self.path)
+        c.shuffleEverything(self.path)
+
+    def shuffle_stop(self):
+        c = study.cardList()
+        c.get(self.path)
+        c.autoshuffle = False
+        c.save(self.path)
+
+    def shuffle_auto(self):
+        c = study.cardList()
+        c.get(self.path)
+        c.autoshuffle = True
+        c.save(self.path)
+
     def set_editor(self):
         c = study.cardList()
         c.get(self.path)
         c.standartTextEdit = self.args[3]
         c.toDict()
         c.save(self.path)
-    
+
     def help(self):
-        print(self.name + " new [filename]\n" + 
+        print(self.name + " new [filename]\n" +
               "        -> creates new flashcard-file\n" +
-              self.name + " add [filename]\n" + 
-              "        -> add new flashcards to file\n" + 
-              self.name + " study [filename]\n" + 
-              "        -> learn your flashcards\n" + 
-              self.name + " edit [filename]\n" + 
-              "        -> edit flashcard-file inside your prefered text editor\n" + 
+              self.name + " add [filename]\n" +
+              "        -> add new flashcards to file\n" +
+              self.name + " study [filename]\n" +
+              "        -> learn your flashcards\n" +
+              self.name + " edit [filename]\n" +
+              "        -> edit flashcard-file inside your prefered text editor\n" +
               self.name + " editor [filename] [editor]\n" +
-              "        -> set your prefered text editor for a file (default: vi)\n" + 
+              "        -> set your prefered text editor for a file (default: vi)\n" +
               self.name + " reset [filename]\n"
-              "        -> reset your statistics\n" + 
-              self.name + " reverse [filename]\n" + 
-              "        -> solutions are now answers\n" + 
-              self.name + " help\n" + 
+              "        -> reset your statistics\n" +
+              self.name + " shuffle [filename]\n"
+              "        -> shuffles your cards\n" +
+              self.name + " shuffle-auto [filename]\n"
+              "        -> enables automatic shuffling \n" +
+              self.name + " shuffle-manual [filename]\n"
+              "        -> disables automatic shuffling (default)\n" +
+              self.name + " reverse [filename]\n" +
+              "        -> solutions are now answers\n" +
+              self.name + " help\n" +
               "        -> shows this")
+
 
 if __name__ == "__main__":
     try:

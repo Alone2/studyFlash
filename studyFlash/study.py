@@ -1,6 +1,7 @@
 import sys
 import json
 import os
+import random
 from pathlib import Path
 
 class editClass:
@@ -121,43 +122,50 @@ class studyClass:
         self.evilLoop()
     
     def evilLoop(self):
-        self.cardList
-        for num in range(len(self.cardList)):
-            # Tests if word is known
-            if self.isKnownList[num]:
-                continue
-            # Question input
-            i = self.cardList[num]
-            inp = input("\nQuestion: " + i.text + " -> ")
+        while(True):
+            # Shuffle, if requested
+            if self.cardList.autoshuffle:
+                self.cardList.shuffle()
+            knownNumber = 0
+            for num in range(len(self.cardList)):
+                # Tests if word is known
+                if self.isKnownList[num]:
+                    knownNumber += 1
+                    continue
+                # Question input
+                i = self.cardList[num]
+                inp = input("\nQuestion: " + i.text + " -> ")
 
-            # Tests if input matchs answer
-            if i.guess(inp):
-                input("correct!      (Enter to continue)")
-            # If incorrect, asks if typo
-            else:
-                correct = input("incorrect: " + i.solution + "      (\"c\" -> correct (typo), \"r\" -> replace (correct), \"w\" -> replace with sth new, Enter -> continue)")
-                if correct == "c":
-                    i.reverseGuess()
-                elif correct == "r":
-                    i.solution = inp
-                    i.toDict()
-                    i.reverseGuess()
-                elif correct == "w":
-                    i.solution = input("correct: ")
-                    i.toDict()
+                # Tests if input matchs answer
+                if i.guess(inp):
+                    input("correct!      (Enter to continue)")
+                # If incorrect, asks if typo
                 else:
-                # if really incorrect 
-                    self.retypeUntilCorrect(i.solution)
-            
-            # Test if user knows the word
-            if self.isKnown(i):
-                self.isKnownList[num] = True
-            
-            # Saves everything
-            self.cardList.save(self.path, False)
-        
-        # repeats itself
-        self.evilLoop()
+                    correct = input("incorrect: " + i.solution + "      (\"c\" -> correct (typo), \"r\" -> replace (correct), \"w\" -> replace with sth new, Enter -> continue)")
+                    if correct == "c":
+                        i.reverseGuess()
+                    elif correct == "r":
+                        i.solution = inp
+                        i.toDict()
+                        i.reverseGuess()
+                    elif correct == "w":
+                        i.solution = input("correct: ")
+                        i.toDict()
+                    else:
+                    # if really incorrect 
+                        self.retypeUntilCorrect(i.solution)
+                
+                # Test if user knows the word
+                if self.isKnown(i):
+                    knownNumber += 1
+                    self.isKnownList[num] = True
+                
+                # Saves everything
+                self.cardList.save(self.path, False)
+            # Checks if user knows every word 
+            if knownNumber >= len(self.cardList):
+                print("You know every word! \nUsing 'studyflash reset FILENAME' you can reset your statistics and begin once again!")
+                break
     
     def isKnown(self, myCard):
         # "algorithm" (later on: customizable)
@@ -231,6 +239,7 @@ class cardList(list):
     def __init__(self):
         self.list = []
         self.config = {}
+        self.autoshuffle = False
 
     def add_new(self, cardItem):
         self.append(cardItem)
@@ -257,6 +266,8 @@ class cardList(list):
             c = i["timesCorrect"]
             ic = i["timesIncorrect"]
             tp = i["timesPlayed"]
+            
+            # streak isn't implemented here
 
             newCard = card(t, s, c, ic, tp)
             self.add_new(newCard)
@@ -266,11 +277,20 @@ class cardList(list):
     def __change_config(self, config):
         self.config = config
         self.standartTextEdit = config["standartTextEditor"]
+        try:
+            self.autoshuffle = config["shuffle"]
+        except:
+            self.autoshuffle = False
+        self.__set_config()
+    
+    def __set_config(self):
+        self.config = {"standartTextEditor":self.standartTextEdit, "shuffle":self.autoshuffle}
 
     def toDict(self):
         self.config["standartTextEditor"] = self.standartTextEdit
         
     def save(self, path, output = True, outputTxt = "saved..."):
+        self.__set_config()
         if output:
             print("\n" + outputTxt)
         # open file, write
@@ -287,7 +307,7 @@ class cardList(list):
             print(errormsg)
             return
         f = open(self.path,"w+")
-        f.write(json.dumps({"cards":{}, "config":{"standartTextEditor":editor}}))
+        f.write(json.dumps({"cards":{}, "config":{"standartTextEditor":editor,"shuffle":False}}))
         f.close()
         print(success)
     
@@ -296,6 +316,18 @@ class cardList(list):
             i.reverse()
         self.save(path)
 
+    def shuffle(self):
+        for i in range(len(self)):
+            r = random.randint(0, len(self)-1)  
+            self[i], self[r] = self[r], self[i]
+
+    def shuffleEverything(self, path):
+        for i in range(len(self)):
+            r = random.randint(0, len(self)-1)  
+            self[i], self[r] = self[r], self[i]
+            self.list[i], self.list[r] = self.list[r], self.list[i]
+        self.save(path)
+    
     def reset(self, path):
         for i in self:
             i.timesCorrect = 0
