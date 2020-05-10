@@ -2,7 +2,7 @@
 # studyFlash
 A python application for learning flashcards inside your terminal (for language learning)
 
-![sample](./images/sample.png)
+<img src="https://github.com/Alone2/studyFlash/blob/master/images/sample.png" width="400">
 
 ## Table of Contents
 1. [Installation](#installation)
