@@ -18,7 +18,7 @@ A python application for learning flashcards inside your terminal (for language 
    4. [Shuffle Cards](#shuffle)
    4. [Condition for Card to be Mastered](#mastered)
    6. [Reset Statistics](#reset)
-   7. [Replace Solution by Answers](#solution)
+   7. [Replace Solution with Answers](#solution)
 
 ## Installation <a name="installation"></a>
 
@@ -52,7 +52,7 @@ yay -S studyflash
 studyflash new FILENAME.json
 ```
 
-A file is being created. You can add your questions / solutions with ```./study.py add FILENAME.json``` or ```./study.py edit FILENAME.json``` (opens with text editor, default -> vim)
+A file is being created. You can add your questions / solutions with ```studyflash add FILENAME.json``` or ```studyflash edit FILENAME.json``` (opens with text editor, default -> vim)
 
 
 ### Add Cards to File  <a name="add"></a>
