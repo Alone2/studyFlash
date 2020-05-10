@@ -61,7 +61,7 @@ class inputField():
     def close(cls):
         cls.stdscr.clear()
         cls.stdscr.refresh()
-        cls.stdscr.move(cls.maxy-1, 0)
+        # cls.stdscr.move(cls.maxy-1, 0)
         os.system("stty sane")
 
 class editParent:
