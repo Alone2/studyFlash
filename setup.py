@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='studyFlash',
-    version='1.0.0',
+    version='1.0.1',
     description="Learning flashcards inside your terminal",
     author="Alone2",
     author_email="contact@asinz.ch",
