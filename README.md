@@ -150,10 +150,10 @@ The following explanation will appear. You can change the last line to your liki
 # You can use 'and' and 'or' to combine statements (see example 2)
 
 # Parameters you can use:
-# cards.timesCorrect: How many times your answer was correct
-# cards.timesIncorrect: How many times your answer was incorrect
-# cards.timesPlayed: How many times you answered the question
-# cards.streak: Your current streak on how many times you're answer was correct.
+# card.timesCorrect: How many times your answer was correct
+# card.timesIncorrect: How many times your answer was incorrect
+# card.timesPlayed: How many times you answered the question
+# card.streak: Your current streak on how many times you're answer was correct.
 
 # Example 1: 
 # card.streak > 2
