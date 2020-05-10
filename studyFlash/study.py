@@ -173,7 +173,7 @@ class editClass(editParent):
             cl += 1
         # if error
         if isError:
-            self._errorHandling(self._getUserInput(self.originalOutput))
+            self._errorHandling(self.checkOutput)
             return
         # remove from list
         minus = 0
