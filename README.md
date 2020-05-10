@@ -78,9 +78,9 @@ studyflash study FILENAME.json
 
 The script now asks you for your flashcards. 
 You need to type them correctly.
-If made a typo you can press "r" to count your answer as correct.
+If you made a typo you can press "c" to count your answer as correct.
 
-If the number of you knowing the correct answer is bigger than of you not knowing the answer, the word will not appear any more. 
+You can [configure](#mastered) when a card counts as mastered and will not appear again.
 
 (use ctrl+c to return to terminal)
 
