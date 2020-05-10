@@ -1,8 +1,69 @@
 import sys
+import time
 import json
 import os
 import random
+import curses
+import locale
 from pathlib import Path
+from curses.textpad import rectangle
+from studyFlash import graphics
+
+class inputField():
+    @classmethod
+    def __init__(cls):
+        # locale.setlocale(locale.LC_ALL, '')
+        # cls.code = locale.getpreferredencoding()
+        cls.stdscr = curses.initscr()
+        # Do not echo input
+        curses.noecho()
+        # respond to keys immediately (don't wait for enter)
+        curses.cbreak()
+        # Capture keys
+        cls.stdscr.keypad(True)
+        # position stuff
+        maxwh = cls.stdscr.getmaxyx()
+        cls.maxx = maxwh[1]
+        cls.maxy = maxwh[0]
+
+    # @classmethod
+    # def validator(cls, keystroke):
+        # print(keystroke) 
+        # print(str(curses.keyname(keystroke)).encode(cls.code))
+        # time.sleep(5)
+        # if keystroke == curses.KEY_ENTER or keystroke == 10 or keystroke == 13:
+            # return 7
+        # cls.box.do_command(keystroke)
+        # return keystroke
+        # return keystroke
+    
+    @classmethod
+    def setQuestion(cls, title, text="", underline="", justWait =False):
+        cls.stdscr.erase()
+        # draw rectangle
+        editwin = curses.newwin(5,cls.maxx-4, cls.maxy-9,2)
+        rectangle(cls.stdscr, cls.maxy-10, 1, cls.maxy-4, 1+cls.maxx-4+1)
+        # new textbox
+        cls.box = graphics.Textbox(editwin)
+        # Title, text and underline
+        cls.stdscr.addstr(cls.maxy-16, 2, title, curses.A_BOLD) 
+        cls.stdscr.addstr(cls.maxy-13, 2, text) 
+        cls.stdscr.addstr(cls.maxy-3, 2, underline) 
+        # refesh screen
+        cls.stdscr.refresh()
+        # if just want char
+        if justWait:
+            char = cls.stdscr.getch()
+            return curses.keyname(char).decode("utf-8") 
+        # get user input
+        return cls.box.gather()
+    @classmethod
+    def close(cls):
+        cls.stdscr.clear()
+        cls.stdscr.refresh()
+        cls.stdscr.move(cls.maxy, 0)
+        print("\n")
+        os.system("stty sane")
 
 class editParent:
     def __init__(self, path):
@@ -129,6 +190,7 @@ class studyClass:
         cardL = cardList()
         cardL.get(path)
         self.cardList = cardL
+        self.inpField = inputField()
         
         self.isKnownList = []
         for i in self.cardList:
@@ -149,14 +211,14 @@ class studyClass:
                     continue
                 # Question input
                 i = self.cardList[num]
-                inp = input("\nQuestion: " + i.text + " -> ")
+                inp = self.inpField.setQuestion("Question", text=i.text, underline="Type the answer and click enter to submit")
 
                 # Tests if input matchs answer
                 if i.guess(inp):
-                    input("correct!      (Enter to continue)")
+                    self.inpField.setQuestion("correct!", underline="(Enter to continue)", justWait=True)
                 # If incorrect, asks if typo
                 else:
-                    correct = input("incorrect: " + i.solution + "      (\"c\" -> correct (typo), \"r\" -> replace (correct), \"w\" -> replace with sth new, Enter -> continue)")
+                    correct = self.inpField.setQuestion("incorrect ", text= i.text + " -> " + i.solution, underline="\"c\" -> correct (typo), \"r\" -> replace (correct) \n  \"w\" -> replace with sth new, Enter -> continue", justWait=True)
                     if correct == "c":
                         i.reverseGuess()
                     elif correct == "r":
@@ -164,11 +226,11 @@ class studyClass:
                         i.toDict()
                         i.reverseGuess()
                     elif correct == "w":
-                        i.solution = input("correct: ")
+                        i.solution = self.inpField.setQuestion("correct", "old: " + i.text + " -> " + i.solution, underline="Type the new correct answer")
                         i.toDict()
                     else:
                     # if really incorrect 
-                        self.retypeUntilCorrect(i.solution)
+                        self.retypeUntilCorrect(i.solution, i.text)
                 
                 # Test if user knows the word
                 if self.isKnown(i):
@@ -179,7 +241,8 @@ class studyClass:
                 self.cardList.save(self.path, False)
             # Checks if user knows every word 
             if knownNumber >= len(self.cardList):
-                print("Congratulations! You mastered every card! \nUsing 'studyflash reset FILENAME' you can reset your statistics and begin once again!")
+                self.inpField.close()
+                print("Congratulations! You mastered every card! \nUsing 'studyflash reset FILENAME' you can reset your statistics and start once again!")
                 break
     
     def isKnown(self, card):
@@ -189,7 +252,8 @@ class studyClass:
         ldict = {"card":card}
         try:
             exec(req, globals(), ldict)
-        except :
+        except:
+            self.inpField.close()
             print("Your condition for knowing if a card is mastered has an error.")
             print("Change it using: studyflash condition FILENAME")
             sys.exit()
@@ -198,10 +262,10 @@ class studyClass:
             return True
         return False
     
-    def retypeUntilCorrect(self, text):
-        inp = input("Type: " + text + " -> ")
+    def retypeUntilCorrect(self, text, oldtxt):
+        inp = self.inpField.setQuestion("incorrect ", text= oldtxt + " -> " + text, underline="Type the correct answer")
         if inp != text: 
-            return self.retypeUntilCorrect(text)
+            return self.retypeUntilCorrect(text, oldtxt)
 
     def generateList(self):
         # List are going to be sorted here
