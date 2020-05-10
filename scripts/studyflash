@@ -1,6 +1,8 @@
 #!/bin/python3
 
 import sys
+import os
+import traceback
 from studyFlash import study
 
 
@@ -56,7 +58,7 @@ class main:
 
     def new_file(self):
         success = "File created, add cards by typing: " + \
-            self.name + " add [FILENAME]  or  ./study edit [FILENAME]"
+            self.name + " add [FILENAME]  or " + self.name + " edit [FILENAME]"
         study.cardList().new(self.path, success=success, editor=self.default_editor)
 
     def new_cards(self):
@@ -79,7 +81,11 @@ class main:
 
     def study(self):
         print("Escape with ctrl+c. Your progress will be saved")
-        study.studyClass(self.path)
+        s = study.studyClass(self.path)
+        try:
+            s.evilLoop()
+        except KeyboardInterrupt:
+            s.inpField.close()
 
     def reset(self):
         c = study.cardList()
@@ -155,7 +161,9 @@ class main:
 if __name__ == "__main__":
     try:
         main()
-    except KeyboardInterrupt:
+    except Exception as e:
         # Save exit comming soon!
-        print("\n")
+        os.system("stty sane")
+        traceback.print_exc()
+        print("\nAn Error has accured...")
         sys.exit()

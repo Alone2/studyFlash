@@ -1,8 +1,68 @@
 import sys
+import time
 import json
 import os
 import random
+import curses
+import locale
 from pathlib import Path
+from curses.textpad import rectangle
+from studyFlash import graphics
+
+class inputField():
+    @classmethod
+    def __init__(cls):
+        # locale.setlocale(locale.LC_ALL, '')
+        # cls.code = locale.getpreferredencoding()
+        cls.stdscr = curses.initscr()
+        # Do not echo input
+        curses.noecho()
+        # respond to keys immediately (don't wait for enter)
+        curses.cbreak()
+        # Capture keys
+        cls.stdscr.keypad(True)
+        # position stuff
+        maxwh = cls.stdscr.getmaxyx()
+        cls.maxx = maxwh[1]
+        cls.maxy = maxwh[0]
+
+    # @classmethod
+    # def validator(cls, keystroke):
+        # print(keystroke) 
+        # print(str(curses.keyname(keystroke)).encode(cls.code))
+        # time.sleep(5)
+        # if keystroke == curses.KEY_ENTER or keystroke == 10 or keystroke == 13:
+            # return 7
+        # cls.box.do_command(keystroke)
+        # return keystroke
+        # return keystroke
+    
+    @classmethod
+    def setQuestion(cls, title, text="", underline="", justWait =False):
+        cls.stdscr.erase()
+        # draw rectangle
+        editwin = curses.newwin(5,cls.maxx-4, cls.maxy-9,2)
+        rectangle(cls.stdscr, cls.maxy-10, 1, cls.maxy-4, 1+cls.maxx-4+1)
+        # new textbox
+        cls.box = graphics.Textbox(editwin)
+        # Title, text and underline
+        cls.stdscr.addstr(cls.maxy-16, 2, title, curses.A_BOLD) 
+        cls.stdscr.addstr(cls.maxy-13, 2, text) 
+        cls.stdscr.addstr(cls.maxy-3, 2, underline) 
+        # refesh screen
+        cls.stdscr.refresh()
+        # if just want char
+        if justWait:
+            char = cls.stdscr.getch()
+            return curses.keyname(char).decode("utf-8") 
+        # get user input
+        return cls.box.gather()
+    @classmethod
+    def close(cls):
+        cls.stdscr.clear()
+        cls.stdscr.refresh()
+        # cls.stdscr.move(cls.maxy-1, 0)
+        os.system("stty sane")
 
 class editParent:
     def __init__(self, path):
@@ -113,7 +173,7 @@ class editClass(editParent):
             cl += 1
         # if error
         if isError:
-            self._errorHandling(self._getUserInput(self.originalOutput))
+            self._errorHandling(self.checkOutput)
             return
         # remove from list
         minus = 0
@@ -129,12 +189,11 @@ class studyClass:
         cardL = cardList()
         cardL.get(path)
         self.cardList = cardL
+        self.inpField = inputField()
         
         self.isKnownList = []
         for i in self.cardList:
             self.isKnownList.append(self.isKnown(i))
-        
-        self.evilLoop()
     
     def evilLoop(self):
         while(True):
@@ -149,14 +208,14 @@ class studyClass:
                     continue
                 # Question input
                 i = self.cardList[num]
-                inp = input("\nQuestion: " + i.text + " -> ")
+                inp = self.inpField.setQuestion("Question", text=i.text, underline="Type the answer and click enter to submit\n  Press 'ctrl+c' to exit")
 
                 # Tests if input matchs answer
                 if i.guess(inp):
-                    input("correct!      (Enter to continue)")
+                    self.inpField.setQuestion("correct!", underline="(Enter to continue)", justWait=True)
                 # If incorrect, asks if typo
                 else:
-                    correct = input("incorrect: " + i.solution + "      (\"c\" -> correct (typo), \"r\" -> replace (correct), \"w\" -> replace with sth new, Enter -> continue)")
+                    correct = self.inpField.setQuestion("incorrect ", text= i.text + " -> " + i.solution, underline="\"c\" -> correct (typo), \"r\" -> replace (correct) \n  \"w\" -> replace with sth new, Enter -> continue", justWait=True)
                     if correct == "c":
                         i.reverseGuess()
                     elif correct == "r":
@@ -164,11 +223,11 @@ class studyClass:
                         i.toDict()
                         i.reverseGuess()
                     elif correct == "w":
-                        i.solution = input("correct: ")
+                        i.solution = self.inpField.setQuestion("correct", "old: " + i.text + " -> " + i.solution, underline="Type the new correct answer")
                         i.toDict()
                     else:
                     # if really incorrect 
-                        self.retypeUntilCorrect(i.solution)
+                        self.retypeUntilCorrect(i.solution, i.text)
                 
                 # Test if user knows the word
                 if self.isKnown(i):
@@ -179,7 +238,8 @@ class studyClass:
                 self.cardList.save(self.path, False)
             # Checks if user knows every word 
             if knownNumber >= len(self.cardList):
-                print("Congratulations! You mastered every card! \nUsing 'studyflash reset FILENAME' you can reset your statistics and begin once again!")
+                self.inpField.close()
+                print("Congratulations! You mastered every card! \nUsing 'studyflash reset FILENAME' you can reset your statistics and start once again!")
                 break
     
     def isKnown(self, card):
@@ -189,7 +249,8 @@ class studyClass:
         ldict = {"card":card}
         try:
             exec(req, globals(), ldict)
-        except :
+        except:
+            self.inpField.close()
             print("Your condition for knowing if a card is mastered has an error.")
             print("Change it using: studyflash condition FILENAME")
             sys.exit()
@@ -198,10 +259,10 @@ class studyClass:
             return True
         return False
     
-    def retypeUntilCorrect(self, text):
-        inp = input("Type: " + text + " -> ")
+    def retypeUntilCorrect(self, text, oldtxt):
+        inp = self.inpField.setQuestion("incorrect ", text= oldtxt + " -> " + text, underline="Type the correct answer")
         if inp != text: 
-            return self.retypeUntilCorrect(text)
+            return self.retypeUntilCorrect(text, oldtxt)
 
     def generateList(self):
         # List are going to be sorted here
@@ -312,17 +373,17 @@ class cardList(list):
             self.correcttest += "\n# Syntax: A python boolean is defined\n"
             self.correcttest += "# You can use 'and' and 'or' to combine statements (see example 2)\n"
             self.correcttest += "\n# Parameters you can use:\n"
-            self.correcttest += "# cards.timesCorrect: How many times youre answer was correct\n"
-            self.correcttest += "# cards.timesIncorrect: How many times youre answer was incorrect\n"
-            self.correcttest += "# cards.timesPlayed: How many times you ansered the question\n"
-            self.correcttest += "# cards.streak: Youre current streak on how many times you're answer correct.\n"
+            self.correcttest += "# cards.timesCorrect: How many times your answer was correct\n"
+            self.correcttest += "# cards.timesIncorrect: How many times your answer was incorrect\n"
+            self.correcttest += "# cards.timesPlayed: How many times you answered the question\n"
+            self.correcttest += "# cards.streak: Your current streak on how many times you're answer was correct.\n"
             self.correcttest += "\n# Example 1: \n"
             self.correcttest += "# card.streak > 2\n"
             self.correcttest += "# Explanation: Card needs to be guessed correctly more than 3 times in a row:\n"
             self.correcttest += "# for it to not appear anymore and be marked as mastered\n"
             self.correcttest += "\n# Example 2 ():\n"
             self.correcttest += "# card.timesCorrect > card.timesIncorrect and card.timesCorrect > 2\n"
-            self.correcttest += "# Explanation: You need to have guessed the card correctly more times than you guessed it incorecctly\n"
+            self.correcttest += "# Explanation: You need to have guessed the card correctly more times than you guessed it incorrectly\n"
             self.correcttest += "# and the card has to be answered correctly more than 2 times for it to not appear again.\n"
             self.correcttest += "\n# Example 3: \n"
             self.correcttest += "# False\n"
