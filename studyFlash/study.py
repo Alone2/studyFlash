@@ -61,8 +61,7 @@ class inputField():
     def close(cls):
         cls.stdscr.clear()
         cls.stdscr.refresh()
-        cls.stdscr.move(cls.maxy, 0)
-        print("\n")
+        cls.stdscr.move(cls.maxy-1, 0)
         os.system("stty sane")
 
 class editParent:
@@ -195,8 +194,6 @@ class studyClass:
         self.isKnownList = []
         for i in self.cardList:
             self.isKnownList.append(self.isKnown(i))
-        
-        self.evilLoop()
     
     def evilLoop(self):
         while(True):
@@ -211,7 +208,7 @@ class studyClass:
                     continue
                 # Question input
                 i = self.cardList[num]
-                inp = self.inpField.setQuestion("Question", text=i.text, underline="Type the answer and click enter to submit")
+                inp = self.inpField.setQuestion("Question", text=i.text, underline="Type the answer and click enter to submit\n  Press 'ctrl+c' to exit")
 
                 # Tests if input matchs answer
                 if i.guess(inp):
