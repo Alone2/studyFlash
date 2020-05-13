@@ -11,5 +11,5 @@ setup(
     author_email="contact@asinz.ch",
     url="https://github.com/Alone2/studyFlash",
     packages=['studyFlash'],
-    scripts=['scripts/studyflash', 'scripts/studyflash-quizlet']
+    scripts=['scripts/studyflash', 'scripts/studyflash-quizlet', 'scripts/studyflash-csv']
 )
