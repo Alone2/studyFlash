@@ -1,0 +1,90 @@
+.TH studyflash 1 "13 May 2020" "1.1.0" "studyflash man page"
+
+.SH NAME 
+studyflash \- Learn flashcards inside your terminal!
+
+.SH SYNOPSIS
+studyflash [\fIOPTION\fI] [\fIFILENAME\fI]
+
+.SH DESCRIPTION
+Studyflash is python application for learning flashcards inside your terminal. 
+Best for language learning. 
+Supports UTF-8 input so you can learn languages with non-english characters.
+
+.SH CONCEPT
+
+.SH COMMANDS
+
+.SS
+studyflash new [\fIFILENAME\fR]
+.PP
+A studyflash file is being created. Now you can use 'edit' or 'add' to add cards.
+
+.SS 
+studyflash add [\fIFILENAME\fR]
+.PP
+User can add flashcards to file.
+.PP
+NOTE: It is recommended to use 'edit' for adding cards, because you currently cannot fix typos with add.
+
+.SS 
+studyflash\-quizlet [\fIQUIZLET_LINK\fR] [\fIFILENAME\fR]
+.PP
+Creates a new file with cards from Quizlet. 
+When the file already exists, the cards are going to be added to the existing ones.
+
+.SS 
+studyflash study FILENAME.json
+.PP
+Learn your flashcards.
+You need to type them correctly.
+If you made a typo you can press "c" to count your answer as correct.
+
+.SS
+studyflash edit FILENAME.json
+.PP
+Your editor (default: vi) opens with all your cards in it. 
+You can change all the answers/questions of your flashcards. 
+.PP
+Deleting a card by renaming the answer/question to '###' is also possible.
+
+.SS
+studyflash editor FILENAME EDITOR
+.PP
+Change your editor from vi to something different. 
+
+.SS
+studyflash shuffle FILENAME
+.PP 
+Shuffle your cards automatically after each round.
+
+.SS
+studyflash shuffle\-auto FILENAME.json
+.PP 
+Shuffle your cards automatically after each round.
+
+.SS
+studyflash shuffle\-manual FILENAME.json
+.PP 
+Stop automatic shuffling.
+
+.SS 
+studyflash condition FILENAME.json
+.PP
+You can configure if when a card should no longer appear and should be considered as mastered.
+More informations is available when you type the command.
+
+.SS
+studyflash reset FILENAME.json
+.PP
+Resets your statistics, so you can start studying from scratch again.
+
+.SS 
+studyflash reverse FILENAME.json
+.PP
+Switch answer and solution
+
+.SH SEE ALSO
+vi(1)
+.SH AUTHOR
+Alone2 (https://github.com/Alone2/)
