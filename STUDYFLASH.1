@@ -1,4 +1,4 @@
-.TH studyflash 1 "13 May 2020" "1.1.0" "studyflash man page"
+.TH studyflash 1 "15 May 2020" "1.1.0" "studyflash man page"
 
 .SH NAME 
 studyflash \- Learn flashcards inside your terminal!
@@ -7,11 +7,18 @@ studyflash \- Learn flashcards inside your terminal!
 studyflash [\fIOPTION\fI] [\fIFILENAME\fI]
 
 .SH DESCRIPTION
+.PP
 Studyflash is python application for learning flashcards inside your terminal. 
 Best for language learning. 
 Supports UTF-8 input so you can learn languages with non-english characters.
-
-.SH CONCEPT
+.PP
+You are able to export / import cards from a CSV file or you can import them directly from Quizlet.
+.PP
+A staple of flashcards, which you want to learn, is represented as a file.
+Configuration considering these cards is stored there aswell.
+You can generate such a file with "studyflash new [FILENAME]"
+.PP
+For more Information read the 'COMMAND' section of this man page.
 
 .SH COMMANDS
 
@@ -79,10 +86,24 @@ studyflash reset [\fIFILENAME\fR]
 .PP
 Resets your statistics, so you can start studying from scratch again.
 
+.SS
+studyflash import [\fICSV_FILE\fR] [\fIFILENAME\fR]
+.PP
+Imports a CSV file.
+.PP
+When the output (FILENAME) file already exists, the cards are going to be added to the existing ones.
+
+.SS
+studyflash export [\fIFILENAME\fR] [\fICSV_FILE\fR] [\fIDELIMITER\fR (optional) ]
+.PP
+Exports a CSV file
+.PP
+If no delimiter is specified "\\t" will be used.
+
 .SS 
 studyflash reverse [\fIFILENAME\fR]
 .PP
-Switch answer and solution
+Switch answers and solutions of each card
 
 .SH SEE ALSO
 vi(1)
