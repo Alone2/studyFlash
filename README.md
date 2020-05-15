@@ -185,7 +185,7 @@ studyflash import [CSV FILE] [FILENAME]
 
 Export your cards to a CSV like this:
 ```
-studyflash export [CSV FILE] [FILENAME] [DELIMITER (optional)]
+studyflash export [FILENAME] [CSV FILE] [DELIMITER (optional)]
 ```
 
 If you don't specify a delimiter, tabs will be used.
