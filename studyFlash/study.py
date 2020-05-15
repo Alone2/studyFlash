@@ -222,12 +222,15 @@ class studyClass:
                 i = self.cardList[num]
                 inp = self.inpField.setQuestion("Question", text=i.text, underline="Type the answer and click enter to submit\n  Press 'ctrl+c' to exit")
 
+                # Shows user answer in comparison to correct answer
+                replyW = "Your answer:     " + inp +  "\n  Correct answer:  " + i.solution
+                replyC = "Answer:           " + inp 
                 # Tests if input matchs answer
                 if i.guess(inp):
-                    self.inpField.setQuestion("correct!", underline="(Enter to continue)", justWait=True)
+                    self.inpField.setQuestion("correct! \n\n  Question:        "+ i.text, text=replyC, underline="(Enter to continue)", justWait=True)
                 # If incorrect, asks if typo
                 else:
-                    correct = self.inpField.setQuestion("incorrect ", text= i.text + " -> " + i.solution, underline="\"c\" -> correct (typo), \"r\" -> replace (correct) \n  \"w\" -> replace with sth new, Enter -> continue", justWait=True)
+                    correct = self.inpField.setQuestion("incorrect \n\n  Question:        " + i.text, text=replyW, underline="\"c\" -> correct (typo), \"r\" -> replace (correct) \n  \"w\" -> replace with sth new, Enter -> continue", justWait=True)
                     if correct == "c":
                         i.reverseGuess()
                     elif correct == "r":
