@@ -3,7 +3,7 @@
 import sys
 import os
 import traceback
-from studyFlash import study
+from studyFlash import study, csv_handler
 
 
 class main:
@@ -38,6 +38,8 @@ class main:
             "shuffle-auto": self.shuffle_auto,
             "shuffle-manual": self.shuffle_stop,
             "shuffle": self.shuffle,
+            "export": self.export_cards,
+            "import": self.import_cards,
             "help": self.help
         }
 
@@ -152,18 +154,41 @@ class main:
               "        -> enables automatic shuffling \n" +
               self.name + " shuffle-manual [filename]\n"
               "        -> disables automatic shuffling (default)\n" +
+              self.name + " import [csv file] [filename]\n"
+              "        -> imports cards from csv file\n" +
+              self.name + " export [filename] [csv file] [delimiter (optional)]\n"
+              "        -> exports cards to csv file\n" +
               self.name + " reverse [filename]\n" +
               "        -> solutions are now answers\n" +
               self.name + " help\n" +
               "        -> shows this")
+    
+    def import_cards(self):
+        if len(self.args) <= 3:
+            print("Error: Not enough arguments")
+            return
+        h = csv_handler.csv_class(self.args[2], self.args[3])
+        h.import_csv()
 
+    def export_cards(self):
+        if len(self.args) <= 3:
+            print("Error: Not enough arguments")
+            return
+        h = csv_handler.csv_class(self.args[3], self.args[2])
+        if len(self.args) <= 4:
+            h.export_csv()
+            return
+        h.export_csv(self.args[4])
 
 if __name__ == "__main__":
     try:
         main()
     except Exception as e:
         # Save exit comming soon!
-        os.system("stty sane")
+        try:
+            os.system("stty sane")
+        except:
+            pass
         traceback.print_exc()
         print("\nAn Error has accured...")
         sys.exit()

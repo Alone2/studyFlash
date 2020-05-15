@@ -1,6 +1,7 @@
 
 # studyFlash
-A python application for learning flashcards inside your terminal (for language learning)
+A python application for learning flashcards inside your terminal (for language learning).
+Linux is the only supported operating system at the moment. It may work on macOS or Windows but I never tested it.
 
 <img src="https://github.com/Alone2/studyFlash/blob/master/images/sample.png" width="400">
 
@@ -10,15 +11,16 @@ A python application for learning flashcards inside your terminal (for language 
    1. [Arch Linux (AUR)](#aur)
 1. [Usage](#usage)
    1. [Create Flashcard File](#create)
-   2. [Add Cards](#add)
-   3. [Import from Quizlet](#import)
-   5. [Learn Cards](#learn)
-   4. [Edit Cards](#edit)
-   4. [Change Default Editor](#editor)
-   4. [Shuffle Cards](#shuffle)
-   4. [Condition for Card to be Mastered](#mastered)
-   6. [Reset Statistics](#reset)
-   7. [Replace Solution with Answers](#solution)
+   1. [Add Cards](#add)
+   1. [Import from Quizlet](#import)
+   1. [Learn Cards](#learn)
+   1. [Edit Cards](#edit)
+   1. [Change Default Editor](#editor)
+   1. [Shuffle Cards](#shuffle)
+   1. [Condition for Card to be Mastered](#mastered)
+   1. [Reset Statistics](#reset)
+   1. [Import / Export CSV Files](#import)
+   1. [Replace Solution with Answers](#solution)
 
 ## Installation <a name="installation"></a>
 
@@ -49,16 +51,16 @@ yay -S studyflash
 
 ### Create a Flashcard File (.json)  <a name="create"></a>
 ```
-studyflash new FILENAME.json
+studyflash new [FILENAME]
 ```
 
-A file is being created. You can add your questions / solutions with ```studyflash add FILENAME.json``` or ```studyflash edit FILENAME.json``` (opens with text editor, default -> vim)
+A file is being created. You can add your questions / solutions with ```studyflash add [FILENAME]``` or ```studyflash edit [FILENAME]``` (opens with text editor, default -> vim)
 
 
 ### Add Cards to File  <a name="add"></a>
 NOTE: It is recommended to use [edit](#edit) for adding cards, because you currently [cannot fix typos](https://github.com/Alone2/studyFlash/issues/2#issuecomment-626209501) with add.
 ```
-studyflash add FILENAME.json
+studyflash add [FILENAME]
 ```
 
 You need to type your questions / solutions
@@ -66,7 +68,7 @@ You need to type your questions / solutions
 
 ### Import Cards from Quizlet <a name="import"></a>
 ```
-studyflash-quizlet QUIZLET_LINK FILENAME.json
+studyflash-quizlet QUIZLET_LINK [FILENAME]
 ```
 
 Creates a new file with cards from Quizlet. 
@@ -75,7 +77,7 @@ When the file already exists, the cards are going to be added to the existing on
 
 ### Learn Cards <a name="learn"></a>
 ```
-studyflash study FILENAME.json
+studyflash study [FILENAME]
 ```
 
 The script now asks you for your flashcards. 
@@ -89,7 +91,7 @@ You can [configure](#mastered) when a card counts as mastered and will not appea
 
 ### Edit your Cards <a name="edit"></a>
 ```
-studyflash edit FILENAME.json
+studyflash edit [FILENAME]
 ```
 
 Vi opens with all your cards in it. (Vi can be difficult for beginners. Change your editor like [this](#editor))
@@ -118,26 +120,26 @@ Something in another language
 ### Change your Default Editor <a name="editor"></a>
 Change your editor from vi to something different. 
 ```
-studyflash editor FILENAME.json EDITOR
+studyflash editor [FILENAME] [EDITOR]
 ```
 I suggest to use nano, if you're a beginner:
 ```
-studyflash editor FILENAME.json nano
+studyflash editor [FILENAME] nano
 ```
 
 ### Shuffle your Cards  <a name="shuffle"></a>
-You can either shuffle your cards manually  with```studyflash shuffle FILENAME.json``` 
+You can either shuffle your cards manually  with```studyflash shuffle [FILENAME]``` 
 or enable automatic shuffling: 
 ```
-studyflash shuffle-auto FILENAME.json
+studyflash shuffle-auto [FILENAME]
 ```
 
-Once enabled, you can disable automatic shuffling like this: ```studyflash shuffle-manual FILENAME.json``` 
+Once enabled, you can disable automatic shuffling like this: ```studyflash shuffle-manual [FILENAME]``` 
 
 ### Condition for Card to be Mastered <a name="mastered"></a>
 You can configure if when a card will no longer appear and is mastered using:
 ```
-studyflash condition FILENAME.json
+studyflash condition [FILENAME]
 ```
 
 The following explanation will appear. You can change the last line to your liking to configure when a card counts as mastered:
@@ -175,9 +177,23 @@ The following explanation will appear. You can change the last line to your liki
 card.timesCorrect > 2 and card.streak >= 2
 ```
 
+### Export or Import CSV Files <a name="import"></a>
+You can import your csv files like this:
+```
+studyflash import [CSV FILE] [FILENAME]
+```
+
+Export your cards to a CSV like this:
+```
+studyflash import [CSV FILE] [FILENAME] [DELIMITER (optional)]
+```
+
+If you don't specify a delimiter, tabs will be used.
+
+
 ### Reset your Statistics  <a name="reset"></a>
 ```
-studyflash reset FILENAME.json
+studyflash reset [FILENAME]
 ```
 
 The script resets the number of you knowing the correct/wrong answer, so you can start studying from scratch again.
@@ -185,7 +201,7 @@ The script resets the number of you knowing the correct/wrong answer, so you can
 
 ### Learn Words by Solution <a name="solution"></a>
 ```
-studyflash reverse FILENAME.json
+studyflash reverse [FILENAME]
 ```
 
 Use that command if you want to switch your solutions with your anwsers.
