@@ -38,7 +38,7 @@ class inputField():
         # return keystroke
     
     @classmethod
-    def setQuestion(cls, title, text="", underline="", justWait =False):
+    def setQuestion(cls, title, text="", underline="", justWait = False, noUserInput = False):
         cls.stdscr.erase()
         # draw rectangle
         editwin = curses.newwin(5,cls.maxx-4, cls.maxy-9,2)
@@ -56,13 +56,17 @@ class inputField():
             char = cls.stdscr.getch()
             return curses.keyname(char).decode("utf-8") 
         # get user input
-        return cls.box.gather()
+        if not noUserInput:
+            return cls.box.gather()
+        return ""
     @classmethod
     def close(cls):
         cls.stdscr.clear()
         cls.stdscr.refresh()
-        # cls.stdscr.move(cls.maxy-1, 0)
-        os.system("stty sane")
+        try:
+            os.system("stty sane")
+        except:
+            pass
 
 class editParent:
     def __init__(self, path):
@@ -196,6 +200,14 @@ class studyClass:
             self.isKnownList.append(self.isKnown(i))
     
     def evilLoop(self):
+        # Error when window too small
+        try:
+            self.inpField.setQuestion("starting...", noUserInput=True)
+        except:
+            self.inpField.close()
+            print("Your terminal-window is probably too small to display the UI of studyflash.\nMake it bigger and retry")
+            return
+        # Study Loop
         while(True):
             # Shuffle, if requested
             if self.cardList.autoshuffle:
