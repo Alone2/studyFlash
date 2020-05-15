@@ -19,7 +19,7 @@ Linux is the only supported operating system at the moment. It may work on macOS
    1. [Shuffle Cards](#shuffle)
    1. [Condition for Card to be Mastered](#mastered)
    1. [Reset Statistics](#reset)
-   1. [Import / Export CSV Files](#import)
+   1. [Import / Export CSV Files](#importCSV)
    1. [Replace Solution with Answers](#solution)
 
 ## Installation <a name="installation"></a>
@@ -177,7 +177,7 @@ The following explanation will appear. You can change the last line to your liki
 card.timesCorrect > 2 and card.streak >= 2
 ```
 
-### Export or Import CSV Files <a name="import"></a>
+### Export or Import CSV Files <a name="importCSV"></a>
 You can import your csv files like this:
 ```
 studyflash import [CSV FILE] [FILENAME]
