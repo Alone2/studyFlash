@@ -5,7 +5,7 @@ setup(
     data_files = [
         ('man/man1', ['STUDYFLASH.1'])
     ],
-    version='1.1.0',
+    version='1.1.3',
     description="Learning flashcards inside your terminal",
     author="Alone2",
     author_email="contact@asinz.ch",
