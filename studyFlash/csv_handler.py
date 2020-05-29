@@ -12,7 +12,7 @@ class csv_class:
 
         # new file
         study.cardList().new(
-            self.cardsFile, errormsg="File is alredy here.\nAppending flashcards to existing ones...")
+            self.cardsFile, errormsg="File is already here.\nAppending flashcards to existing ones...")
 
     # importing
     def import_csv(self):
