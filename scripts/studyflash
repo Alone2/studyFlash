@@ -10,7 +10,7 @@ class main:
     def __init__(self):
         self.args = sys.argv
         self.default_editor = "vi"
-        self.name = self.args[0].split("/")[-1]shabang
+        self.name = self.args[0].split("/")[-1]
 
         # Tests if arguments there
         if len(sys.argv) < 3:
