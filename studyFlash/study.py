@@ -317,6 +317,7 @@ class card:
             return True
         else:
             self.timesIncorrect += 1
+            self.streakBefore = self.streak
             self.streak = 0
             self.toDict()
             return False
@@ -324,7 +325,8 @@ class card:
     def reverseGuess(self):
         self.timesIncorrect -= 1 
         self.timesCorrect += 1
-        self.streak = self.streakBefore
+        self.streak = self.streakBefore + 1
+        self.toDict()
 
     def reverse(self):
         t = self.text 
