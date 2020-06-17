@@ -3,7 +3,8 @@ from distutils.core import setup
 setup(
     name='studyFlash',
     data_files = [
-        ('man/man1', ['STUDYFLASH.1'])
+        ('man/man1', ['extra/STUDYFLASH.1']),
+        ('man/man1', ['extra/STUDYFLASH-QUIZLET.1'])
     ],
     version='1.1.3',
     description="Learning flashcards inside your terminal",
