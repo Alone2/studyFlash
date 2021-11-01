@@ -143,7 +143,7 @@ studyflash condition [FILENAME]
 ```
 
 The following explanation will appear. You can change the last line to your liking to configure when a card counts as mastered:
-```
+```python
 # It is defined here when a card counts as mastered and will 
 # not be asked again. 
 # (reset statistics to study cards again with: 'studyflash reset FILENAME')
